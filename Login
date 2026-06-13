@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 10px; }
+    .card { background: #f0f4f8; padding: 20px; border-radius: 8px; border-left: 5px solid #007bff; }
+    input, button { padding: 10px; margin-top: 10px; width: 100%; box-sizing: border-box; }
+    button { background: #007bff; color: white; border: none; font-weight: bold; cursor: pointer; }
+    #welcomeMessage { display: none; color: green; font-weight: bold; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h3 style="margin-top:0;">Player Login</h3>
+    <div id="loginForm">
+      <input type="text" id="prefixInput" placeholder="Enter Student Prefix (e.g., abc123)">
+      <button onclick="performLogin()">Log In</button>
+      <div id="loginStatus" style="color: red; margin-top: 5px;"></div>
+    </div>
+    <div id="welcomeMessage"></div>
+  </div>
+
+  <script>
+    const API_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL"; // PASTE YOUR URL HERE
+
+    // Check if already logged in on page load
+    window.onload = () => {
+      const savedName = localStorage.getItem('tc_name');
+      if(savedName) showWelcome(savedName, localStorage.getItem('tc_squad'));
+    };
+
+    async function performLogin() {
+      const prefix = document.getElementById('prefixInput').value.trim();
+      const statusBox = document.getElementById('loginStatus');
+      
+      if(!prefix) return statusBox.innerText = "Please enter a prefix.";
+      statusBox.innerText = "Authenticating...";
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'login', prefix: prefix })
+        });
+        
+        const result = await response.json();
+
+        if(result.status === "success") {
+          // Save data to browser memory!
+          localStorage.setItem('tc_prefix', prefix);
+          localStorage.setItem('tc_name', result.playerName);
+          localStorage.setItem('tc_squad', result.squadName);
+          showWelcome(result.playerName, result.squadName);
+        } else {
+          statusBox.innerText = result.message;
+        }
+      } catch (err) {
+        statusBox.innerText = "Network error. Try again.";
+      }
+    }
+
+    function showWelcome(name, squad) {
+      document.getElementById('loginForm').style.display = 'none';
+      const welcome = document.getElementById('welcomeMessage');
+      welcome.style.display = 'block';
+      welcome.innerHTML = `Welcome back, <b>${name}</b>! <br>Assigned to: ${squad} <br><br><button style='background:#dc3545;' onclick='logout()'>Log Out</button>`;
+    }
+
+    function logout() {
+      localStorage.clear();
+      location.reload();
+    }
+  </script>
+</body>
+</html>
