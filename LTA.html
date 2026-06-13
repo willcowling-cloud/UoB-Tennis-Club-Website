@@ -5,14 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LTA Submission</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    html, body {
+      overflow: hidden;
+      touch-action: none;
+    }
+  </style>
 </head>
-<body class="bg-transparent m-0 p-2 font-sans overflow-hidden">
+<body class="bg-transparent m-0 p-2 font-sans">
 
-  <div class="max-w-md mx-auto bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+  <div class="max-w-md mx-auto bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
     <h3 class="text-base font-bold text-slate-800 m-0 mb-2">LTA Registration</h3>
     
     <div id="ltaLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-      🔑 Please log in via the dashboard widget to unlock LTA registration.
+      🔑 Please log in via the portal widget to unlock LTA registration.
     </div>
     
     <div id="ltaUnlocked" class="hidden">
@@ -22,9 +28,9 @@
       </p>
       <div class="flex gap-2">
         <input type="text" id="ltaInput" placeholder="Enter LTA Number" 
-               class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-hidden focus:border-emerald-500">
+               class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500">
         <button onclick="submitLTA()" 
-                class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors whitespace-nowrap">
+                class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow-sm cursor-pointer transition-colors whitespace-nowrap">
           Save Number
         </button>
       </div>
@@ -35,24 +41,20 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwbcb5ureVKb1daLBFxFa6qb0WjhpOm4lAZj198W_-bIdnVsfTR6f9ybNezJ0CF51CpbQ/exec"; // Paste your deployment /exec URL here
 
-    // 1. Check for login when the page first loads
     window.onload = () => {
       checkLoginState();
     };
 
-    // 2. THE FIX: Listen for changes in real-time if they log in after loading
     window.addEventListener('storage', () => {
       checkLoginState();
     });
 
-    // Helper function to handle the UI toggle
     function checkLoginState() {
       const prefix = localStorage.getItem('tc_prefix');
       if(prefix) {
         document.getElementById('ltaLocked').classList.add('hidden');
         document.getElementById('ltaUnlocked').classList.remove('hidden');
       } else {
-        // If they log out, lock it back up automatically
         document.getElementById('ltaLocked').classList.remove('hidden');
         document.getElementById('ltaUnlocked').classList.add('hidden');
       }
