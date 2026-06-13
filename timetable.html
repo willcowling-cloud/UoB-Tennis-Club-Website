@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Squad Timetable</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    html, body {
+      overflow: hidden;
+      touch-action: none;
+    }
+  </style>
+</head>
+<body class="bg-transparent m-0 p-2 font-sans">
+
+  <div class="max-w-md mx-auto bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+    <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Your Squad Timetable</h3>
+    
+    <div id="timetableLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+      🔑 Please log in via the portal widget to view your squad schedule.
+    </div>
+    
+    <div id="timetableLoading" class="hidden text-xs text-slate-500 italic text-center py-4">
+      Fetching your training schedule...
+    </div>
+
+    <div id="timetableUnlocked" class="hidden overflow-x-auto">
+      <table class="w-full text-left text-xs border-collapse">
+        <thead>
+          <tr class="bg-slate-50 border-b border-slate-200">
+            <th class="p-2.5 font-semibold text-slate-600">Session</th>
+            <th class="p-2.5 font-semibold text-slate-600">Day & Time</th>
+          </tr>
+        </thead>
+        <tbody id="timetableBody" class="divide-y divide-slate-100 text-slate-700">
+          </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbwbcb5ureVKb1daLBFxFa6qb0WjhpOm4lAZj198W_-bIdnVsfTR6f9ybNezJ0CF51CpbQ/exec"; // Paste your deployment /exec URL here
+
+    window.onload = () => {
+      evaluateState();
+    };
+
+    window.addEventListener('storage', () => {
+      evaluateState();
+    });
+
+    function evaluateState() {
+      const squad = localStorage.getItem('tc_squad');
+      const prefix = localStorage.getItem('tc_prefix');
+      
+      if (prefix && squad) {
+        document.getElementById('timetableLocked').classList.add('hidden');
+        document.getElementById('timetableUnlocked').classList.add('hidden');
+        document.getElementById('timetableLoading').classList.remove('hidden');
+        fetchTimetable(squad);
+      } else {
+        document.getElementById('timetableLocked').classList.remove('hidden');
+        document.getElementById('timetableUnlocked').classList.add('hidden');
+        document.getElementById('timetableLoading').classList.add('hidden');
+      }
+    }
+
+    async function fetchTimetable(squadName) {
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'getTimetable', squad: squadName })
+        });
+        const result = await response.json();
+        
+        const tableBody = document.getElementById('timetableBody');
+        tableBody.innerHTML = ""; // Empty previous rows
+        
+        if (result.status === "success" && result.data.length > 0) {
+          result.data.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-50/50 transition-colors";
+            tr.innerHTML = `
+              <td class="p-2.5 font-medium text-slate-900">${row.session}</td>
+              <td class="p-2.5 text-slate-600">${row.dayTime}</td>
+            `;
+            tableBody.appendChild(tr);
+          });
+          
+          document.getElementById('timetableLoading').classList.add('hidden');
+          document.getElementById('timetableUnlocked').classList.remove('hidden');
+        } else {
+          tableBody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-slate-400 italic">No scheduled entries found for this squad.</td></tr>`;
+          document.getElementById('timetableLoading').classList.add('hidden');
+          document.getElementById('timetableUnlocked').classList.remove('hidden');
+        }
+      } catch (err) {
+        document.getElementById('timetableLoading').classList.add('hidden');
+        document.getElementById('timetableLocked').classList.remove('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
