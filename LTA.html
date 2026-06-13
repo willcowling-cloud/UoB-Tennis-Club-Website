@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LTA Submission</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-transparent m-0 p-2 font-sans overflow-hidden">
+
+  <div class="max-w-md mx-auto bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+    <h3 class="text-base font-bold text-slate-800 m-0 mb-2">LTA Registration</h3>
+    
+    <div id="ltaLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+      🔑 Please log in via the dashboard widget to unlock LTA registration.
+    </div>
+    
+    <div id="ltaUnlocked" class="hidden">
+      <p class="text-xs text-slate-500 m-0 mb-3 leading-relaxed">
+        Please link your LTA number below. Don't have one? 
+        <a href="https://www.lta.org.uk/register/" target="_blank" class="text-blue-600 hover:underline font-semibold">Sign up for free here</a>.
+      </p>
+      <div class="flex gap-2">
+        <input type="text" id="ltaInput" placeholder="Enter LTA Number" 
+               class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-hidden focus:border-emerald-500">
+        <button onclick="submitLTA()" 
+                class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors whitespace-nowrap">
+          Save Number
+        </button>
+      </div>
+      <div id="ltaStatus" class="text-xs font-medium mt-1.5 min-h-[16px]"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL"; // Paste your deployment /exec URL here
+
+    // The Magic Link: Check shared storage on load
+    window.onload = () => {
+      const prefix = localStorage.getItem('tc_prefix');
+      if(prefix) {
+        document.getElementById('ltaLocked').classList.add('hidden');
+        document.getElementById('ltaUnlocked').classList.remove('hidden');
+      }
+    };
+
+    async function submitLTA() {
+      const ltaNum = document.getElementById('ltaInput').value.trim();
+      const statusBox = document.getElementById('ltaStatus');
+      const prefix = localStorage.getItem('tc_prefix');
+      
+      if(!ltaNum) {
+        statusBox.className = "text-xs font-medium mt-1.5 text-red-600";
+        return statusBox.innerText = "Please input your LTA number.";
+      }
+      
+      statusBox.className = "text-xs font-medium mt-1.5 text-slate-500";
+      statusBox.innerText = "Saving to squad record...";
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'submitLTA', prefix: prefix, lta: ltaNum })
+        });
+        const result = await response.json();
+        
+        if(result.status === "success") {
+          statusBox.className = "text-xs font-medium mt-1.5 text-emerald-600";
+          statusBox.innerText = result.message;
+          document.getElementById('ltaInput').value = ""; 
+        } else {
+          statusBox.className = "text-xs font-medium mt-1.5 text-red-600";
+          statusBox.innerText = result.message;
+        }
+      } catch (err) {
+        statusBox.className = "text-xs font-medium mt-1.5 text-red-600";
+        statusBox.innerText = "Failed to communicate with database.";
+      }
+    }
+  </script>
+</body>
+</html>
