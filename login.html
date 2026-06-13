@@ -34,7 +34,7 @@
       const statusBox = document.getElementById('loginStatus');
       
       if(!prefix) return statusBox.innerText = "Please enter a prefix.";
-      statusBox.innerText = "Authenticating...";
+      statusBox.innerText = "Logging in...";
 
       try {
         const response = await fetch(API_URL, {
