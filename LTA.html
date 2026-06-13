@@ -33,16 +33,30 @@
   </div>
 
   <script>
-    const API_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL"; // Paste your deployment /exec URL here
+    const API_URL = "https://script.google.com/macros/s/AKfycbwbcb5ureVKb1daLBFxFa6qb0WjhpOm4lAZj198W_-bIdnVsfTR6f9ybNezJ0CF51CpbQ/exec"; // Paste your deployment /exec URL here
 
-    // The Magic Link: Check shared storage on load
+    // 1. Check for login when the page first loads
     window.onload = () => {
+      checkLoginState();
+    };
+
+    // 2. THE FIX: Listen for changes in real-time if they log in after loading
+    window.addEventListener('storage', () => {
+      checkLoginState();
+    });
+
+    // Helper function to handle the UI toggle
+    function checkLoginState() {
       const prefix = localStorage.getItem('tc_prefix');
       if(prefix) {
         document.getElementById('ltaLocked').classList.add('hidden');
         document.getElementById('ltaUnlocked').classList.remove('hidden');
+      } else {
+        // If they log out, lock it back up automatically
+        document.getElementById('ltaLocked').classList.remove('hidden');
+        document.getElementById('ltaUnlocked').classList.add('hidden');
       }
-    };
+    }
 
     async function submitLTA() {
       const ltaNum = document.getElementById('ltaInput').value.trim();
