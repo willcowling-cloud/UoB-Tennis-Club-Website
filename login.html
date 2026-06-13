@@ -1,68 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player Login</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-    body { font-family: sans-serif; margin: 0; padding: 10px; }
-    .card { background: #f0f4f8; padding: 20px; border-radius: 8px; border-left: 5px solid #007bff; }
-    input, button { padding: 10px; margin-top: 10px; width: 100%; box-sizing: border-box; }
-    button { background: #007bff; color: white; border: none; font-weight: bold; cursor: pointer; }
-    #welcomeMessage { display: none; color: green; font-weight: bold; margin-top: 10px; }
+    html, body {
+      overflow: hidden;
+      touch-action: none;
+    }
   </style>
 </head>
-<body>
-  <div class="card">
-    <h3 style="margin-top:0;">Player Login</h3>
+<body class="bg-transparent m-0 p-2 font-sans">
+
+  <div class="max-w-md mx-auto bg-slate-50 border-l-4 border-blue-600 rounded-r-xl p-4 shadow-sm">
     <div id="loginForm">
-      <input type="text" id="prefixInput" placeholder="Enter Student Prefix (e.g., abc123)">
-      <button onclick="performLogin()">Log In</button>
-      <div id="loginStatus" style="color: red; margin-top: 5px;"></div>
+      <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Player Portal Login</h3>
+      <div class="flex gap-2">
+        <input type="text" id="prefixInput" placeholder="Student Prefix (e.g., abc123)" 
+               class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+        <button onclick="performLogin()" 
+                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-sm cursor-pointer transition-colors whitespace-nowrap">
+          Log In
+        </button>
+      </div>
+      <div id="loginStatus" class="text-xs text-red-600 font-medium mt-1.5 min-h-[16px]"></div>
     </div>
-    <div id="welcomeMessage"></div>
+    
+    <div id="welcomeMessage" class="hidden flex items-center justify-between w-full">
+      <div>
+        <span class="text-emerald-600 font-bold text-sm flex items-center gap-1">✓ Logged In</span>
+        <p class="text-xs text-slate-600 m-0 mt-0.5">Welcome, <strong id="userDisp" class="text-slate-800"></strong> (<span id="squadDisp" class="italic"></span>)</p>
+      </div>
+      <button onclick="logout()" 
+              class="px-2.5 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold rounded-md shadow-sm cursor-pointer transition-colors">
+        Log Out
+      </button>
+    </div>
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwbcb5ureVKb1daLBFxFa6qb0WjhpOm4lAZj198W_-bIdnVsfTR6f9ybNezJ0CF51CpbQ/exec"; // PASTE YOUR URL HERE
+    const API_URL = "https://script.google.com/macros/s/AKfycbwbcb5ureVKb1daLBFxFa6qb0WjhpOm4lAZj198W_-bIdnVsfTR6f9ybNezJ0CF51CpbQ/exec"; // Paste your deployment /exec URL here
 
-    // Check if already logged in on page load
     window.onload = () => {
       const savedName = localStorage.getItem('tc_name');
-      if(savedName) showWelcome(savedName, localStorage.getItem('tc_squad'));
+      const savedSquad = localStorage.getItem('tc_squad');
+      if(savedName) showWelcome(savedName, savedSquad);
     };
 
     async function performLogin() {
-      const prefix = document.getElementById('prefixInput').value.trim();
+      const prefix = document.getElementById('prefixInput').value.trim().toLowerCase();
       const statusBox = document.getElementById('loginStatus');
       
-      if(!prefix) return statusBox.innerText = "Please enter a prefix.";
-      statusBox.innerText = "Logging in...";
+      if(!prefix) return statusBox.innerText = "Please enter your prefix.";
+      statusBox.classList.remove('text-red-600');
+      statusBox.classList.add('text-slate-500');
+      statusBox.innerText = "Authenticating...";
 
       try {
         const response = await fetch(API_URL, {
           method: 'POST',
           body: JSON.stringify({ action: 'login', prefix: prefix })
         });
-        
         const result = await response.json();
 
         if(result.status === "success") {
-          // Save data to browser memory!
           localStorage.setItem('tc_prefix', prefix);
           localStorage.setItem('tc_name', result.playerName);
           localStorage.setItem('tc_squad', result.squadName);
           showWelcome(result.playerName, result.squadName);
         } else {
+          statusBox.classList.add('text-red-600');
           statusBox.innerText = result.message;
         }
       } catch (err) {
-        statusBox.innerText = "Network error. Try again.";
+        statusBox.classList.add('text-red-600');
+        statusBox.innerText = "Network Error. Check Web App settings.";
       }
     }
 
     function showWelcome(name, squad) {
-      document.getElementById('loginForm').style.display = 'none';
-      const welcome = document.getElementById('welcomeMessage');
-      welcome.style.display = 'block';
-      welcome.innerHTML = `Welcome back, <b>${name}</b> <br>Assigned to: ${squad} <br><br><button style='background:#dc3545;' onclick='logout()'>Log Out</button>`;
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('userDisp').innerText = name;
+      document.getElementById('squadDisp').innerText = squad;
+      document.getElementById('welcomeMessage').classList.remove('hidden');
     }
 
     function logout() {
