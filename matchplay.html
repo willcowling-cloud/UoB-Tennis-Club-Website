@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matchplay Logger</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    html, body {
+      margin: 0; padding: 2px;
+      overflow: hidden; 
+      touch-action: pan-y; 
+      height: 100vh; box-sizing: border-box;
+    }
+    /* Hide scrollbar for the internal form but allow scrolling */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; overflow-y: auto; max-height: calc(100vh - 20px); }
+  </style>
+</head>
+<body class="bg-transparent m-0 p-2 font-sans">
+
+  <div class="max-w-md mx-auto bg-white border border-slate-200 rounded-xl p-4 shadow-sm no-scrollbar">
+    <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Log Match Result</h3>
+    
+    <div id="lockedState" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+      🔑 Please log in via the portal to log matches.
+    </div>
+    
+    <div id="unlockedState" class="hidden flex flex-col gap-4">
+      
+      <div>
+        <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Winners</label>
+        <div id="winnersList" class="mt-1 flex flex-wrap gap-2 text-sm">Loading squad...</div>
+      </div>
+
+      <div>
+        <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Losers</label>
+        <div id="losersList" class="mt-1 flex flex-wrap gap-2 text-sm">Loading squad...</div>
+      </div>
+
+      <div>
+        <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Score (e.g. 6-4, 6-2)</label>
+        <input type="text" id="scoreInput" placeholder="Final Score" 
+               class="mt-1 w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+      </div>
+
+      <button onclick="submitMatch()" 
+              class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-sm cursor-pointer transition-colors">
+        Submit Result
+      </button>
+      
+      <div id="statusMsg" class="text-xs font-medium text-center min-h-[16px]"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL"; 
+    let squadPlayers = [];
+
+    window.onload = checkLoginState;
+    window.addEventListener('storage', checkLoginState);
+
+    function checkLoginState() {
+      const squad = localStorage.getItem('tc_squad');
+      const prefix = localStorage.getItem('tc_prefix');
+      
+      if (prefix && squad) {
+        document.getElementById('lockedState').classList.add('hidden');
+        document.getElementById('unlockedState').classList.remove('hidden');
+        if (squadPlayers.length === 0) fetchRoster(squad);
+      } else {
+        document.getElementById('lockedState').classList.remove('hidden');
+        document.getElementById('unlockedState').classList.add('hidden');
+      }
+    }
+
+    async function fetchRoster(squadName) {
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'getSquadRoster', squad: squadName })
+        });
+        const result = await response.json();
+        
+        if (result.status === "success") {
+          squadPlayers = result.data;
+          renderCheckboxes('winnersList', 'win');
+          renderCheckboxes('losersList', 'lose');
+        }
+      } catch (err) {
+        console.error("Failed to load roster.");
+      }
+    }
+
+    function renderCheckboxes(containerId, prefix) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = squadPlayers.map((player, i) => `
+        <label class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-2.5 py-1.5 rounded-md cursor-pointer hover:bg-slate-100">
+          <input type="checkbox" value="${player}" class="${prefix}-cb w-4 h-4 text-blue-600 rounded-sm focus:ring-blue-500">
+          <span class="text-slate-700 font-medium">${player}</span>
+        </label>
+      `).join('');
+    }
+
+    async function submitMatch() {
+      const squad = localStorage.getItem('tc_squad');
+      const statusBox = document.getElementById('statusMsg');
+      const score = document.getElementById('scoreInput').value.trim();
+      
+      const winners = Array.from(document.querySelectorAll('.win-cb:checked')).map(cb => cb.value);
+      const losers = Array.from(document.querySelectorAll('.lose-cb:checked')).map(cb => cb.value);
+
+      if (winners.length === 0 || losers.length === 0 || !score) {
+        statusBox.className = "text-xs font-medium text-center text-red-600";
+        return statusBox.innerText = "Please select winners, losers, and enter a score.";
+      }
+
+      statusBox.className = "text-xs font-medium text-center text-slate-500";
+      statusBox.innerText = "Saving match data...";
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'submitMatchResult', squad, winners, losers, score })
+        });
+        const result = await response.json();
+        
+        if (result.status === "success") {
+          statusBox.className = "text-xs font-medium text-center text-emerald-600";
+          statusBox.innerText = result.message;
+          
+          // Reset form
+          document.getElementById('scoreInput').value = "";
+          document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        } else {
+          statusBox.className = "text-xs font-medium text-center text-red-600";
+          statusBox.innerText = result.message;
+        }
+      } catch (err) {
+        statusBox.className = "text-xs font-medium text-center text-red-600";
+        statusBox.innerText = "Failed to communicate with database.";
+      }
+    }
+  </script>
+</body>
+</html>
