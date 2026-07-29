@@ -7,12 +7,12 @@
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
     .tab-btn.active {
-      color: #60a5fa; /* blue-400 */
+      color: #60a5fa; /* Tailwind blue-400 */
       border-bottom: 2px solid #60a5fa;
     }
   </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800 min-h-screen">
+<body class="bg-slate-50 font-sans text-slate-800 min-h-screen pb-12">
 
   <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
     <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -28,73 +28,82 @@
   <main class="max-w-5xl mx-auto px-4 py-8">
 
     <div id="page-home" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      
-      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-        <h3 class="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">Member Login</h3>
-        <div id="loginContent">
-          <p class="text-sm text-slate-600">Login form elements here...</p>
-        </div>
-      </section>
-
-      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-        <h3 class="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">LTA Integration</h3>
-        <div id="ltaContent">
-          <p class="text-sm text-slate-600">LTA opt-in elements here...</p>
-        </div>
-      </section>
-
+      <div id="container-login"></div>
+      <div id="container-lta"></div>
     </div>
-
 
     <div id="page-matches" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-      
-      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-        <h3 class="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">Log Match Result</h3>
-        <div id="matchplayContent">
-          <p class="text-sm text-slate-600">Matchplay form elements here...</p>
-        </div>
-      </section>
-
-      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-        <h3 class="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">Squad Standings</h3>
-        <div id="leaderboardContent">
-          <p class="text-sm text-slate-600">Leaderboard table here...</p>
-        </div>
-      </section>
-
+      <div id="container-matchplay"></div>
+      <div id="container-leaderboard"></div>
     </div>
 
-
     <div id="page-schedule" class="hidden max-w-3xl mx-auto">
-      
-      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-        <h3 class="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">Weekly Timetable</h3>
-        <div id="timetableContent">
-          <p class="text-sm text-slate-600">Timetable view here...</p>
-        </div>
-      </section>
-
+      <div id="container-timetable"></div>
     </div>
 
   </main>
 
   <script>
+    // Cache modules in memory so they only download ONCE over Wi-Fi
+    const moduleCache = {};
+
+    async function loadModule(containerId, filePath) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      try {
+        if (!moduleCache[filePath]) {
+          const res = await fetch(filePath);
+          moduleCache[filePath] = await res.text();
+        }
+
+        const htmlText = moduleCache[filePath];
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
+
+        // Extract body or raw HTML
+        container.innerHTML = doc.body ? doc.body.innerHTML : htmlText;
+
+        // Re-run any <script> tags inside the modular file
+        const scripts = container.querySelectorAll("script");
+        scripts.forEach(oldScript => {
+          const newScript = document.createElement("script");
+          Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+          newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+          oldScript.parentNode.replaceChild(newScript, oldScript);
+        });
+      } catch (e) {
+        console.error(`Failed to load module: ${filePath}`, e);
+      }
+    }
+
+    // Switch tabs without reloading pages
     function switchTab(tabName) {
-      // Hide all page views
       document.getElementById('page-home').classList.add('hidden');
       document.getElementById('page-matches').classList.add('hidden');
       document.getElementById('page-schedule').classList.add('hidden');
 
-      // Remove active underline styling from buttons
       document.getElementById('tab-home').classList.remove('active');
       document.getElementById('tab-matches').classList.remove('active');
       document.getElementById('tab-schedule').classList.remove('active');
 
-      // Show the requested page view and activate its tab button
       document.getElementById(`page-${tabName}`).classList.remove('hidden');
       document.getElementById(`tab-${tabName}`).classList.add('active');
-    }
-  </script>
 
+      // Lazy load modules when tabs are opened
+      if (tabName === 'matches') {
+        loadModule('container-matchplay', 'matchplay.html');
+        loadModule('container-leaderboard', 'Leaderboard.html');
+      } else if (tabName === 'schedule') {
+        loadModule('container-timetable', 'timetable.html');
+      }
+    }
+
+    // Initial load for Home tab modules
+    window.onload = () => {
+      loadModule('container-login', 'login.html');
+      loadModule('container-lta', 'LTA.html');
+    };
+  </script>
 </body>
 </html>
