@@ -127,6 +127,15 @@
       document.getElementById('loadingState').classList.add('hidden');
       document.getElementById('unlockedState').classList.remove('hidden');
     }
+  // LISTEN FOR MATCH SUBMISSIONS AND AUTO-REFRESH
+  const matchChannel = new BroadcastChannel('match_updates');
+  matchChannel.onmessage = (event) => {
+    const squad = localStorage.getItem('tc_squad');
+    if (event.data === 'match_logged' && squad) {
+    fetchLeaderboard(squad);
+    }
+};
+  
   </script>
 </body>
 </html>
