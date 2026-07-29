@@ -12,40 +12,84 @@
       touch-action: pan-y; 
       height: 100vh; box-sizing: border-box;
     }
-    /* Hide scrollbar for the internal form but allow scrolling */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; overflow-y: auto; max-height: calc(100vh - 20px); }
   </style>
 </head>
 <body class="bg-transparent m-0 p-2 font-sans">
 
-  <div class="max-w-md mx-auto bg-white border border-slate-200 rounded-xl p-4 shadow-sm no-scrollbar">
-    <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Log Match Result</h3>
+  <div class="max-w-md mx-auto bg-white border border-slate-200 rounded-xl p-5 shadow-sm no-scrollbar">
+    <h3 class="text-base font-bold text-slate-800 m-0 mb-3">Log Match Result</h3>
     
     <div id="lockedState" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-      🔑 Please log in via the portal to log matches.
+      🔑 Please log in via the portal widget to record matches.
     </div>
     
     <div id="unlockedState" class="hidden flex flex-col gap-4">
       
-      <div>
-        <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Winners</label>
-        <div id="winnersList" class="mt-1 flex flex-wrap gap-2 text-sm">Loading squad...</div>
+      <div class="flex items-center justify-between bg-slate-100 p-1.5 rounded-lg border border-slate-200">
+        <span class="text-xs font-bold text-slate-700 ml-2 uppercase tracking-wider">Format</span>
+        <div class="flex gap-1">
+          <button id="singlesBtn" type="button" onclick="setMatchType(false)" 
+                  class="px-3 py-1 text-xs font-semibold rounded-md bg-white text-slate-800 shadow-xs cursor-pointer transition-all">
+            Singles
+          </button>
+          <button id="doublesBtn" type="button" onclick="setMatchType(true)" 
+                  class="px-3 py-1 text-xs font-semibold rounded-md text-slate-500 hover:text-slate-800 cursor-pointer transition-all">
+            Doubles
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-bold text-emerald-700 uppercase tracking-wider">🏆 Winner(s)</label>
+        <select id="winner1" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 font-medium text-slate-700">
+          <option value="">Select Winner 1...</option>
+        </select>
+        <select id="winner2" class="hidden w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 font-medium text-slate-700">
+          <option value="">Select Winner 2 (Doubles)...</option>
+        </select>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-xs font-bold text-rose-700 uppercase tracking-wider">❌ Loser(s)</label>
+        <select id="loser1" class="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 font-medium text-slate-700">
+          <option value="">Select Loser 1...</option>
+        </select>
+        <select id="loser2" class="hidden w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 font-medium text-slate-700">
+          <option value="">Select Loser 2 (Doubles)...</option>
+        </select>
       </div>
 
       <div>
-        <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Losers</label>
-        <div id="losersList" class="mt-1 flex flex-wrap gap-2 text-sm">Loading squad...</div>
-      </div>
-
-      <div>
-        <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Score (e.g. 6-4, 6-2)</label>
-        <input type="text" id="scoreInput" placeholder="Final Score" 
-               class="mt-1 w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+        <label class="text-xs font-bold text-slate-600 uppercase tracking-wider">Score</label>
+        <select id="scoreSelect" class="mt-1 w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 font-medium text-slate-700">
+          <option value="">Select Final Score...</option>
+          <optgroup label="Standard Sets">
+            <option value="6-0">6-0</option>
+            <option value="6-1">6-1</option>
+            <option value="6-2">6-2</option>
+            <option value="6-3">6-3</option>
+            <option value="6-4">6-4</option>
+            <option value="7-5">7-5</option>
+            <option value="7-6">7-6 (Tiebreak)</option>
+            <option value="10-8">10-8 (Supertiebreak)</option>
+          </optgroup>
+          <optgroup label="Fast4 / Short Sets">
+            <option value="4-0">4-0</option>
+            <option value="4-1">4-1</option>
+            <option value="4-2">4-2</option>
+            <option value="4-3">4-3</option>
+          </optgroup>
+          <optgroup label="Best of 3 Sets">
+            <option value="2-0">2-0 (Sets)</option>
+            <option value="2-1">2-1 (Sets)</option>
+          </optgroup>
+        </select>
       </div>
 
       <button onclick="submitMatch()" 
-              class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-sm cursor-pointer transition-colors">
+              class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-sm cursor-pointer transition-colors mt-1">
         Submit Result
       </button>
       
@@ -54,8 +98,9 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwbcb5ureVKb1daLBFxFa6qb0WjhpOm4lAZj198W_-bIdnVsfTR6f9ybNezJ0CF51CpbQ/exec"; 
+    const API_URL = "YOUR_APPS_SCRIPT_WEB_APP_URL"; // Ensure your Web App URL is pasted here
     let squadPlayers = [];
+    let isDoubles = false;
 
     window.onload = checkLoginState;
     window.addEventListener('storage', checkLoginState);
@@ -74,6 +119,28 @@
       }
     }
 
+    function setMatchType(doubles) {
+      isDoubles = doubles;
+      const singlesBtn = document.getElementById('singlesBtn');
+      const doublesBtn = document.getElementById('doublesBtn');
+      const w2 = document.getElementById('winner2');
+      const l2 = document.getElementById('loser2');
+
+      if (isDoubles) {
+        doublesBtn.className = "px-3 py-1 text-xs font-semibold rounded-md bg-white text-slate-800 shadow-xs cursor-pointer transition-all";
+        singlesBtn.className = "px-3 py-1 text-xs font-semibold rounded-md text-slate-500 hover:text-slate-800 cursor-pointer transition-all";
+        w2.classList.remove('hidden');
+        l2.classList.remove('hidden');
+      } else {
+        singlesBtn.className = "px-3 py-1 text-xs font-semibold rounded-md bg-white text-slate-800 shadow-xs cursor-pointer transition-all";
+        doublesBtn.className = "px-3 py-1 text-xs font-semibold rounded-md text-slate-500 hover:text-slate-800 cursor-pointer transition-all";
+        w2.classList.add('hidden');
+        l2.classList.add('hidden');
+        w2.value = "";
+        l2.value = "";
+      }
+    }
+
     async function fetchRoster(squadName) {
       try {
         const response = await fetch(API_URL, {
@@ -84,35 +151,68 @@
         
         if (result.status === "success") {
           squadPlayers = result.data;
-          renderCheckboxes('winnersList', 'win');
-          renderCheckboxes('losersList', 'lose');
+          populateDropdowns();
         }
       } catch (err) {
-        console.error("Failed to load roster.");
+        console.error("Failed to load squad roster.");
       }
     }
 
-    function renderCheckboxes(containerId, prefix) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = squadPlayers.map((player, i) => `
-        <label class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-2.5 py-1.5 rounded-md cursor-pointer hover:bg-slate-100">
-          <input type="checkbox" value="${player}" class="${prefix}-cb w-4 h-4 text-blue-600 rounded-sm focus:ring-blue-500">
-          <span class="text-slate-700 font-medium">${player}</span>
-        </label>
-      `).join('');
+    function populateDropdowns() {
+      const dropdowns = ['winner1', 'winner2', 'loser1', 'loser2'];
+      
+      dropdowns.forEach(id => {
+        const select = document.getElementById(id);
+        const placeholder = select.options[0].text;
+        select.innerHTML = `<option value="">${placeholder}</option>`;
+        
+        squadPlayers.forEach(player => {
+          const opt = document.createElement('option');
+          opt.value = player;
+          opt.textContent = player;
+          select.appendChild(opt);
+        });
+      });
     }
 
     async function submitMatch() {
       const squad = localStorage.getItem('tc_squad');
       const statusBox = document.getElementById('statusMsg');
-      const score = document.getElementById('scoreInput').value.trim();
-      
-      const winners = Array.from(document.querySelectorAll('.win-cb:checked')).map(cb => cb.value);
-      const losers = Array.from(document.querySelectorAll('.lose-cb:checked')).map(cb => cb.value);
+      const score = document.getElementById('scoreSelect').value;
 
-      if (winners.length === 0 || losers.length === 0 || !score) {
-        statusBox.className = "text-xs font-medium text-center text-red-600";
-        return statusBox.innerText = "Please select winners, losers, and enter a score.";
+      const w1 = document.getElementById('winner1').value;
+      const w2 = document.getElementById('winner2').value;
+      const l1 = document.getElementById('loser1').value;
+      const l2 = document.getElementById('loser2').value;
+
+      let winners = [];
+      let losers = [];
+
+      // Validation
+      if (!isDoubles) {
+        if (!w1 || !l1 || !score) {
+          statusBox.className = "text-xs font-medium text-center text-red-600";
+          return statusBox.innerText = "Please select a winner, loser, and score.";
+        }
+        if (w1 === l1) {
+          statusBox.className = "text-xs font-medium text-center text-red-600";
+          return statusBox.innerText = "Winner and loser cannot be the same player.";
+        }
+        winners = [w1];
+        losers = [l1];
+      } else {
+        if (!w1 || !w2 || !l1 || !l2 || !score) {
+          statusBox.className = "text-xs font-medium text-center text-red-600";
+          return statusBox.innerText = "Please select all 4 players and a score for doubles.";
+        }
+        const selected = [w1, w2, l1, l2];
+        const unique = new Set(selected);
+        if (unique.size !== 4) {
+          statusBox.className = "text-xs font-medium text-center text-red-600";
+          return statusBox.innerText = "All 4 players in doubles must be unique!";
+        }
+        winners = [w1, w2];
+        losers = [l1, l2];
       }
 
       statusBox.className = "text-xs font-medium text-center text-slate-500";
@@ -129,9 +229,12 @@
           statusBox.className = "text-xs font-medium text-center text-emerald-600";
           statusBox.innerText = result.message;
           
-          // Reset form
-          document.getElementById('scoreInput').value = "";
-          document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+          // Reset selections
+          document.getElementById('winner1').value = "";
+          document.getElementById('winner2').value = "";
+          document.getElementById('loser1').value = "";
+          document.getElementById('loser2').value = "";
+          document.getElementById('scoreSelect').value = "";
         } else {
           statusBox.className = "text-xs font-medium text-center text-red-600";
           statusBox.innerText = result.message;
