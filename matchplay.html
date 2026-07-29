@@ -72,8 +72,7 @@
             <option value="6-3">6-3</option>
             <option value="6-4">6-4</option>
             <option value="7-5">7-5</option>
-            <option value="7-6">7-6 (Tiebreak)</option>
-            <option value="10-8">10-8 (Supertiebreak)</option>
+            <option value="7-6">7-6</option>
           </optgroup>
           <optgroup label="Fast4 Sets">
             <option value="4-0">4-0</option>
@@ -243,6 +242,10 @@
         statusBox.className = "text-xs font-medium text-center text-red-600";
         statusBox.innerText = "Failed to communicate with database.";
       }
+      // BROADCAST MATCH UPDATE TO LEADERBOARD
+      const matchChannel = new BroadcastChannel('match_updates');
+      matchChannel.postMessage('match_logged');
+      matchChannel.close();
     }
   </script>
 </body>
