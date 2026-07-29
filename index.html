@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UoB Tennis Hub</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .tab-btn.active {
+      color: #60a5fa; /* blue-400 */
+      border-bottom: 2px solid #60a5fa;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 min-h-screen">
+
+  <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+      <h1 class="text-lg font-bold tracking-tight">UoB Tennis Hub</h1>
+      <nav class="flex gap-4 text-sm font-semibold">
+        <button onclick="switchTab('home')" id="tab-home" class="tab-btn active pb-0.5 text-slate-300 hover:text-white transition-colors cursor-pointer">Home</button>
+        <button onclick="switchTab('matches')" id="tab-matches" class="tab-btn pb-0.5 text-slate-300 hover:text-white transition-colors cursor-pointer">Matchplay & Standings</button>
+        <button onclick="switchTab('schedule')" id="tab-schedule" class="tab-btn pb-0.5 text-slate-300 hover:text-white transition-colors cursor-pointer">Timetable</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+
+    <div id="page-home" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h3 class="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">Member Login</h3>
+        <div id="loginContent">
+          <p class="text-sm text-slate-600">Login form elements here...</p>
+        </div>
+      </section>
+
+      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h3 class="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">LTA Integration</h3>
+        <div id="ltaContent">
+          <p class="text-sm text-slate-600">LTA opt-in elements here...</p>
+        </div>
+      </section>
+
+    </div>
+
+
+    <div id="page-matches" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h3 class="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">Log Match Result</h3>
+        <div id="matchplayContent">
+          <p class="text-sm text-slate-600">Matchplay form elements here...</p>
+        </div>
+      </section>
+
+      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h3 class="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">Squad Standings</h3>
+        <div id="leaderboardContent">
+          <p class="text-sm text-slate-600">Leaderboard table here...</p>
+        </div>
+      </section>
+
+    </div>
+
+
+    <div id="page-schedule" class="hidden max-w-3xl mx-auto">
+      
+      <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h3 class="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">Weekly Timetable</h3>
+        <div id="timetableContent">
+          <p class="text-sm text-slate-600">Timetable view here...</p>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <script>
+    function switchTab(tabName) {
+      // Hide all page views
+      document.getElementById('page-home').classList.add('hidden');
+      document.getElementById('page-matches').classList.add('hidden');
+      document.getElementById('page-schedule').classList.add('hidden');
+
+      // Remove active underline styling from buttons
+      document.getElementById('tab-home').classList.remove('active');
+      document.getElementById('tab-matches').classList.remove('active');
+      document.getElementById('tab-schedule').classList.remove('active');
+
+      // Show the requested page view and activate its tab button
+      document.getElementById(`page-${tabName}`).classList.remove('hidden');
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
