@@ -6,37 +6,34 @@
   <title>UoB Tennis Hub</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-    /* Active tab button highlighting */
+    /* High-contrast tab button state for outdoor visibility */
     .nav-btn.active {
-      background-color: #2563eb; /* Tailwind blue-600 */
+      background-color: #0f172a; /* Slate 900 */
       color: #ffffff;
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
     }
   </style>
 </head>
-<body class="bg-slate-950 font-sans text-slate-100 min-h-screen pb-16 selection:bg-blue-500 selection:text-white">
+<body class="bg-slate-100 font-sans text-slate-900 min-h-screen pb-12 selection:bg-blue-600 selection:text-white">
 
-  <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 shadow-lg">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex justify-between items-center">
+  <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-xs">
+    <div class="max-w-5xl mx-auto px-4 py-2.5 flex items-center justify-between gap-2">
       
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-black text-white text-lg shadow-md shadow-blue-500/20">
-          🎾
-        </div>
-        <div>
-          <h1 class="text-base font-extrabold tracking-tight text-white leading-none">UoB TENNIS HUB</h1>
-          <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Official Player Portal</span>
-        </div>
+      <div class="flex items-center gap-2.5 min-w-0">
+        <img src="logo.jpg" alt="UoB Crest" class="h-9 w-auto object-contain flex-shrink-0">
+        <h1 class="text-sm sm:text-base font-black tracking-tight text-slate-900 uppercase truncate">
+          UoB Tennis
+        </h1>
       </div>
 
-      <nav class="flex items-center gap-1 bg-slate-800/80 p-1 rounded-xl border border-slate-700/50">
-        <button onclick="switchTab('home')" id="tab-home" class="nav-btn active px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition-all cursor-pointer">
+      <nav class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold flex-shrink-0">
+        <button onclick="switchTab('home')" id="tab-home" class="nav-btn active px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
           Home
         </button>
-        <button onclick="switchTab('matches')" id="tab-matches" class="nav-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition-all cursor-pointer">
-          Matchplay & Standings
+        <button onclick="switchTab('matches')" id="tab-matches" class="nav-btn px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
+          Matchplay
         </button>
-        <button onclick="switchTab('schedule')" id="tab-schedule" class="nav-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition-all cursor-pointer">
+        <button onclick="switchTab('schedule')" id="tab-schedule" class="nav-btn px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
           Timetable
         </button>
       </nav>
@@ -44,51 +41,43 @@
     </div>
   </header>
 
-  <section class="relative overflow-hidden border-b border-slate-800">
-    <div class="absolute inset-0 z-0">
-      <img src="banner.jpg" 
-           alt="UoB Tennis Banner" 
-           class="w-full h-full object-cover object-center transform scale-105 filter brightness-75">
-      
-      <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-900/40"></div>
+  <section class="relative overflow-hidden bg-slate-900 border-b border-slate-200">
+    <div class="absolute inset-0 z-0 opacity-45">
+      <img src="banner.jpg" alt="Tennis Banner" class="w-full h-full object-cover object-center">
     </div>
 
-    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-10 flex flex-col items-start">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 backdrop-blur-md mb-4">
-        <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-        <span class="text-xs font-bold uppercase tracking-wider text-blue-300">Spring Season Active</span>
-      </div>
-      <h2 class="text-3xl sm:text-5xl font-black tracking-tight text-white mb-2">
+    <div class="relative z-10 max-w-5xl mx-auto px-4 py-8 sm:py-10">
+      <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight mb-1">
         University of Birmingham Tennis
       </h2>
-      <p class="text-sm sm:text-base text-slate-300 max-w-xl font-medium">
-        Log match outcomes, track live squad standings, and check session timetables across all tiers.
+      <p class="text-xs sm:text-sm text-slate-200 max-w-lg font-medium">
+        Log match outcomes, view live squad standings, and check weekly timetables.
       </p>
     </div>
   </section>
 
-  <main class="max-w-6xl mx-auto px-4 sm:px-6 -mt-4 relative z-20">
+  <main class="max-w-5xl mx-auto px-4 py-6">
 
-    <div id="page-home" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+    <div id="page-home" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-xs">
         <div id="container-login"></div>
       </div>
-      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-xs">
         <div id="container-lta"></div>
       </div>
     </div>
 
-    <div id="page-matches" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+    <div id="page-matches" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-xs">
         <div id="container-matchplay"></div>
       </div>
-      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-xs">
         <div id="container-leaderboard"></div>
       </div>
     </div>
 
-    <div id="page-schedule" class="hidden max-w-4xl mx-auto">
-      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+    <div id="page-schedule" class="hidden max-w-3xl mx-auto">
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-xs">
         <div id="container-timetable"></div>
       </div>
     </div>
