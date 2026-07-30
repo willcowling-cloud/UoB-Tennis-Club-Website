@@ -6,45 +6,96 @@
   <title>UoB Tennis Hub</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-    .tab-btn.active {
-      color: #60a5fa; /* Tailwind blue-400 */
-      border-bottom: 2px solid #60a5fa;
+    /* Active tab button highlighting */
+    .nav-btn.active {
+      background-color: #2563eb; /* Tailwind blue-600 */
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
     }
   </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800 min-h-screen pb-12">
+<body class="bg-slate-950 font-sans text-slate-100 min-h-screen pb-16 selection:bg-blue-500 selection:text-white">
 
-  <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
-      <h1 class="text-lg font-bold tracking-tight">UoB Tennis Hub</h1>
-      <nav class="flex gap-4 text-sm font-semibold">
-        <button onclick="switchTab('home')" id="tab-home" class="tab-btn active pb-0.5 text-slate-300 hover:text-white transition-colors cursor-pointer">Home</button>
-        <button onclick="switchTab('matches')" id="tab-matches" class="tab-btn pb-0.5 text-slate-300 hover:text-white transition-colors cursor-pointer">Matchplay & Standings</button>
-        <button onclick="switchTab('schedule')" id="tab-schedule" class="tab-btn pb-0.5 text-slate-300 hover:text-white transition-colors cursor-pointer">Timetable</button>
+  <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 shadow-lg">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex justify-between items-center">
+      
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-black text-white text-lg shadow-md shadow-blue-500/20">
+          🎾
+        </div>
+        <div>
+          <h1 class="text-base font-extrabold tracking-tight text-white leading-none">UoB TENNIS HUB</h1>
+          <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Official Player Portal</span>
+        </div>
+      </div>
+
+      <nav class="flex items-center gap-1 bg-slate-800/80 p-1 rounded-xl border border-slate-700/50">
+        <button onclick="switchTab('home')" id="tab-home" class="nav-btn active px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition-all cursor-pointer">
+          Home
+        </button>
+        <button onclick="switchTab('matches')" id="tab-matches" class="nav-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition-all cursor-pointer">
+          Matchplay & Standings
+        </button>
+        <button onclick="switchTab('schedule')" id="tab-schedule" class="nav-btn px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition-all cursor-pointer">
+          Timetable
+        </button>
       </nav>
+
     </div>
   </header>
 
-  <main class="max-w-5xl mx-auto px-4 py-8">
+  <section class="relative overflow-hidden border-b border-slate-800">
+    <div class="absolute inset-0 z-0">
+      <img src="banner.jpg" 
+           alt="UoB Tennis Banner" 
+           class="w-full h-full object-cover object-center transform scale-105 filter brightness-75">
+      
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-900/40"></div>
+    </div>
+
+    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-10 flex flex-col items-start">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 backdrop-blur-md mb-4">
+        <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+        <span class="text-xs font-bold uppercase tracking-wider text-blue-300">Spring Season Active</span>
+      </div>
+      <h2 class="text-3xl sm:text-5xl font-black tracking-tight text-white mb-2">
+        University of Birmingham Tennis
+      </h2>
+      <p class="text-sm sm:text-base text-slate-300 max-w-xl font-medium">
+        Log match outcomes, track live squad standings, and check session timetables across all tiers.
+      </p>
+    </div>
+  </section>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 -mt-4 relative z-20">
 
     <div id="page-home" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div id="container-login"></div>
-      <div id="container-lta"></div>
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+        <div id="container-login"></div>
+      </div>
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+        <div id="container-lta"></div>
+      </div>
     </div>
 
     <div id="page-matches" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div id="container-matchplay"></div>
-      <div id="container-leaderboard"></div>
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+        <div id="container-matchplay"></div>
+      </div>
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+        <div id="container-leaderboard"></div>
+      </div>
     </div>
 
-    <div id="page-schedule" class="hidden max-w-3xl mx-auto">
-      <div id="container-timetable"></div>
+    <div id="page-schedule" class="hidden max-w-4xl mx-auto">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+        <div id="container-timetable"></div>
+      </div>
     </div>
 
   </main>
 
   <script>
-    // Cache modules in memory so they only download ONCE over Wi-Fi
     const moduleCache = {};
 
     async function loadModule(containerId, filePath) {
@@ -61,23 +112,20 @@
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
 
-        // Extract body or raw HTML
         container.innerHTML = doc.body ? doc.body.innerHTML : htmlText;
 
-        // Re-run any <script> tags inside the modular file
         const scripts = container.querySelectorAll("script");
         scripts.forEach(oldScript => {
           const newScript = document.createElement("script");
           Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-          newScript.appendChild(document.createTextNode(oldScript.innerHTML));
-          oldScript.parentNode.replaceChild(newScript, oldScript);
+          newScript.text = oldScript.innerHTML;
+          document.body.appendChild(newScript);
         });
       } catch (e) {
-        console.error(`Failed to load module: ${filePath}`, e);
+        console.error(`Error loading ${filePath}:`, e);
       }
     }
 
-    // Switch tabs without reloading pages
     function switchTab(tabName) {
       document.getElementById('page-home').classList.add('hidden');
       document.getElementById('page-matches').classList.add('hidden');
@@ -90,7 +138,6 @@
       document.getElementById(`page-${tabName}`).classList.remove('hidden');
       document.getElementById(`tab-${tabName}`).classList.add('active');
 
-      // Lazy load modules when tabs are opened
       if (tabName === 'matches') {
         loadModule('container-matchplay', 'matchplay.html');
         loadModule('container-leaderboard', 'Leaderboard.html');
@@ -99,7 +146,6 @@
       }
     }
 
-    // Initial load for Home tab modules
     window.onload = () => {
       loadModule('container-login', 'login.html');
       loadModule('container-lta', 'LTA.html');
