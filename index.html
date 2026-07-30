@@ -3,81 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
   <title>UoB Tennis Hub</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-    /* High-contrast tab button state for outdoor visibility */
+    /* High-contrast active pill for tabs */
     .nav-btn.active {
       background-color: #0f172a; /* Slate 900 */
       color: #ffffff;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+    /* Hide scrollbar for mobile tab scrolling */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-900 min-h-screen pb-12 selection:bg-blue-600 selection:text-white">
 
-  <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-xs">
-    <div class="max-w-5xl mx-auto px-4 py-2.5 flex items-center justify-between gap-2">
-      
-      <div class="flex items-center gap-2.5 min-w-0">
-        <img src="logo.jpg" alt="UoB Crest" class="h-9 w-auto object-contain flex-shrink-0">
-        <h1 class="text-sm sm:text-base font-black tracking-tight text-slate-900 uppercase truncate">
-          UoB Tennis
-        </h1>
-      </div>
-
-      <nav class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold flex-shrink-0">
-        <button onclick="switchTab('home')" id="tab-home" class="nav-btn active px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
-          Home
-        </button>
-        <button onclick="switchTab('matches')" id="tab-matches" class="nav-btn px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
-          Matchplay
-        </button>
-        <button onclick="switchTab('schedule')" id="tab-schedule" class="nav-btn px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
-          Timetable
-        </button>
-      </nav>
-
+  <header class="bg-white border-b border-slate-200">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
+      <img src="logo.jpg" alt="UoB Crest" class="h-10 sm:h-12 w-auto object-contain flex-shrink-0">
+      <h1 class="text-lg sm:text-xl font-black tracking-tight text-slate-900 uppercase">
+        UoB Tennis
+      </h1>
     </div>
   </header>
 
-  <section class="relative overflow-hidden bg-slate-900 border-b border-slate-200">
-    <div class="absolute inset-0 z-0 opacity-45">
-      <img src="banner.jpg" alt="Tennis Banner" class="w-full h-full object-cover object-center">
+  <section class="relative bg-slate-900 flex items-center justify-center sm:justify-start min-h-[160px] sm:min-h-[220px]">
+    <div class="absolute inset-0 z-0">
+      <img src="banner.jpg" alt="Tennis Banner" class="w-full h-full object-cover object-center opacity-60">
     </div>
-
-    <div class="relative z-10 max-w-5xl mx-auto px-4 py-8 sm:py-10">
-      <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight mb-1">
+    <div class="relative z-10 max-w-5xl mx-auto px-4 py-8 w-full text-center sm:text-left">
+      <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight drop-shadow-md">
         University of Birmingham Tennis
       </h2>
-      <p class="text-xs sm:text-sm text-slate-200 max-w-lg font-medium">
-        Log match outcomes, view live squad standings, and check weekly timetables.
-      </p>
     </div>
   </section>
+
+  <nav class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-2 py-2.5 flex items-center justify-center sm:justify-start gap-2 overflow-x-auto no-scrollbar">
+      <button onclick="switchTab('home')" id="tab-home" class="nav-btn active px-5 py-2 rounded-lg text-sm font-bold text-slate-600 hover:text-slate-900 transition-all whitespace-nowrap cursor-pointer">
+        Home
+      </button>
+      <button onclick="switchTab('matches')" id="tab-matches" class="nav-btn px-5 py-2 rounded-lg text-sm font-bold text-slate-600 hover:text-slate-900 transition-all whitespace-nowrap cursor-pointer">
+        Matchplay
+      </button>
+      <button onclick="switchTab('schedule')" id="tab-schedule" class="nav-btn px-5 py-2 rounded-lg text-sm font-bold text-slate-600 hover:text-slate-900 transition-all whitespace-nowrap cursor-pointer">
+        Timetable
+      </button>
+    </div>
+  </nav>
 
   <main class="max-w-5xl mx-auto px-4 py-6">
 
     <div id="page-home" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-xs">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
         <div id="container-login"></div>
       </div>
-      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-xs">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
         <div id="container-lta"></div>
       </div>
     </div>
 
     <div id="page-matches" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-xs">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
         <div id="container-matchplay"></div>
       </div>
-      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-xs">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
         <div id="container-leaderboard"></div>
       </div>
     </div>
 
     <div id="page-schedule" class="hidden max-w-3xl mx-auto">
-      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 shadow-xs">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
         <div id="container-timetable"></div>
       </div>
     </div>
