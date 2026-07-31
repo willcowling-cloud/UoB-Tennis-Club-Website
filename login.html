@@ -23,8 +23,6 @@
 </div>
 
 <script>
-  window.API_URL = "https://script.google.com/macros/s/AKfycbwbcb5ureVKb1daLBFxFa6qb0WjhpOm4lAZj198W_-bIdnVsfTR6f9ybNezJ0CF51CpbQ/exec";
-
   window.performLogin = async function() {
     const prefixInput = document.getElementById('prefixInput');
     const statusBox = document.getElementById('loginStatus');
@@ -54,6 +52,9 @@
         localStorage.setItem('tc_name', result.playerName);
         localStorage.setItem('tc_squad', result.squadName);
         window.showWelcome(result.playerName, result.squadName);
+        
+        // This instantly unlocks all other modules
+        if (window.triggerAppRefresh) window.triggerAppRefresh();
       } else {
         statusBox.classList.add('text-red-600');
         statusBox.innerText = result.message;
@@ -80,10 +81,10 @@
     location.reload();
   };
 
-  // Run automatically when index.html loads this fragment
   (function checkLoginState() {
     const savedName = localStorage.getItem('tc_name');
     const savedSquad = localStorage.getItem('tc_squad');
     if (savedName) window.showWelcome(savedName, savedSquad);
   })();
 </script>
+
