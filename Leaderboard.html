@@ -1,141 +1,104 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Squad Leaderboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <style>
-    html, body {
-      margin: 0; padding: 2px;
-      overflow: hidden; 
-      touch-action: pan-y; 
-      height: 100vh; box-sizing: border-box;
-    }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; overflow-y: auto; max-height: calc(100vh - 20px); }
-  </style>
-</head>
-<body class="bg-transparent m-0 p-2 font-sans">
+<div class="flex justify-between items-end mb-4">
+  <h3 class="text-base font-bold text-slate-800 m-0">Live Standings</h3>
+  <span id="squadNameDisplay" class="text-xs font-semibold text-blue-600 uppercase tracking-wider hidden"></span>
+</div>
 
-  <div class="max-w-md mx-auto bg-white border border-slate-200 rounded-xl p-5 shadow-sm no-scrollbar">
-    <div class="flex justify-between items-end mb-4">
-      <h3 class="text-base font-bold text-slate-800 m-0">Live Standings</h3>
-      <span id="squadNameDisplay" class="text-xs font-semibold text-blue-600 uppercase tracking-wider hidden"></span>
-    </div>
-    
-    <div id="lockedState" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-      Please log in via the portal to view your squad's leaderboard.
-    </div>
+<div id="lockedStateLeaderboard" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+  Please log in via the portal to view your squad's leaderboard.
+</div>
 
-    <div id="loadingState" class="hidden text-sm text-slate-500 font-medium text-center py-6">
-      Loading standings...
-    </div>
-    
-    <div id="unlockedState" class="hidden overflow-hidden rounded-lg border border-slate-200">
-      <table class="w-full text-left border-collapse">
-        <thead>
-          <tr class="bg-slate-100 text-xs text-slate-500 uppercase tracking-wider border-b border-slate-200">
-            <th class="py-2 pl-3 pr-1 font-semibold w-8">#</th>
-            <th class="py-2 px-2 font-semibold">Player</th>
-            <th class="py-2 px-1 font-semibold text-center">W</th>
-            <th class="py-2 px-1 font-semibold text-center">L</th>
-            <th class="py-2 pr-3 pl-1 font-semibold text-right">Win %</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboardBody" class="text-sm">
-          </tbody>
-      </table>
-    </div>
-  </div>
+<div id="loadingState" class="hidden text-sm text-slate-500 font-medium text-center py-6">
+  Loading standings...
+</div>
 
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwbcb5ureVKb1daLBFxFa6qb0WjhpOm4lAZj198W_-bIdnVsfTR6f9ybNezJ0CF51CpbQ/exec"; // Paste your live web app URL here
+<div id="unlockedStateLeaderboard" class="hidden overflow-hidden rounded-lg border border-slate-200">
+  <table class="w-full text-left border-collapse">
+    <thead>
+      <tr class="bg-slate-100 text-xs text-slate-500 uppercase tracking-wider border-b border-slate-200">
+        <th class="py-2 pl-3 pr-1 font-semibold w-8">#</th>
+        <th class="py-2 px-2 font-semibold">Player</th>
+        <th class="py-2 px-1 font-semibold text-center">W</th>
+        <th class="py-2 px-1 font-semibold text-center">L</th>
+        <th class="py-2 pr-3 pl-1 font-semibold text-right">Win %</th>
+      </tr>
+    </thead>
+    <tbody id="leaderboardBody" class="text-sm">
+    </tbody>
+  </table>
+</div>
 
-    window.onload = checkLoginState;
-    window.addEventListener('storage', checkLoginState);
-
-    function checkLoginState() {
-      const squad = localStorage.getItem('tc_squad');
-      const prefix = localStorage.getItem('tc_prefix');
-      
-      if (prefix && squad) {
-        document.getElementById('lockedState').classList.add('hidden');
-        document.getElementById('squadNameDisplay').classList.remove('hidden');
-        document.getElementById('squadNameDisplay').innerText = squad;
-        
-        // Only fetch if table is empty to prevent spamming the database
-        if (document.getElementById('leaderboardBody').innerHTML.trim() === "") {
-          fetchLeaderboard(squad);
-        } else {
-          document.getElementById('unlockedState').classList.remove('hidden');
-        }
-      } else {
-        document.getElementById('lockedState').classList.remove('hidden');
-        document.getElementById('unlockedState').classList.add('hidden');
-        document.getElementById('squadNameDisplay').classList.add('hidden');
-        document.getElementById('leaderboardBody').innerHTML = ""; 
-      }
-    }
-
-    async function fetchLeaderboard(squadName) {
-      document.getElementById('loadingState').classList.remove('hidden');
-      document.getElementById('unlockedState').classList.add('hidden');
-
-      try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'getLeaderboard', squad: squadName })
-        });
-        const result = await response.json();
-        
-        if (result.status === "success") {
-          renderLeaderboard(result.data);
-        } else {
-          document.getElementById('loadingState').innerText = "Failed to load data.";
-        }
-      } catch (err) {
-        document.getElementById('loadingState').innerText = "Connection error.";
-      }
-    }
-
-    function renderLeaderboard(data) {
-      const tbody = document.getElementById('leaderboardBody');
-      tbody.innerHTML = "";
-
-      data.forEach((player, index) => {
-        const rank = index + 1;
-        
-        // Styling: Highlight 1st place slightly, alternate row colors for the rest
-        let rowClass = "border-b border-slate-100 last:border-none ";
-        if (rank === 1) rowClass += "bg-blue-50/50";
-        else if (rank % 2 === 0) rowClass += "bg-slate-50/50";
-        else rowClass += "bg-white";
-
-        const tr = document.createElement('tr');
-        tr.className = rowClass;
-        tr.innerHTML = `
-          <td class="py-2.5 pl-3 pr-1 text-slate-400 font-semibold">${rank}</td>
-          <td class="py-2.5 px-2 text-slate-800 font-medium">${player.name}</td>
-          <td class="py-2.5 px-1 text-slate-700 text-center">${player.won}</td>
-          <td class="py-2.5 px-1 text-slate-500 text-center">${player.lost}</td>
-          <td class="py-2.5 pr-3 pl-1 text-right font-medium ${player.winRate >= 50 ? 'text-emerald-600' : 'text-slate-500'}">${player.winRate}%</td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      document.getElementById('loadingState').classList.add('hidden');
-      document.getElementById('unlockedState').classList.remove('hidden');
-    }
-  // LISTEN FOR MATCH SUBMISSIONS AND AUTO-REFRESH
-  const matchChannel = new BroadcastChannel('match_updates');
-  matchChannel.onmessage = (event) => {
+<script>
+  window.checkLeaderboardLoginState = function() {
     const squad = localStorage.getItem('tc_squad');
-    if (event.data === 'match_logged' && squad) {
-    fetchLeaderboard(squad);
+    const prefix = localStorage.getItem('tc_prefix');
+    
+    const locked = document.getElementById('lockedStateLeaderboard');
+    const unlocked = document.getElementById('unlockedStateLeaderboard');
+    const display = document.getElementById('squadNameDisplay');
+    const body = document.getElementById('leaderboardBody');
+
+    if (!locked || !unlocked || !display || !body) return;
+
+    if (prefix && squad) {
+      locked.classList.add('hidden');
+      display.classList.remove('hidden');
+      display.innerText = squad;
+      
+      if (body.innerHTML.trim() === "") {
+        window.fetchLeaderboard(squad);
+      } else {
+        unlocked.classList.remove('hidden');
+      }
+    } else {
+      locked.classList.remove('hidden');
+      unlocked.classList.add('hidden');
+      display.classList.add('hidden');
+      body.innerHTML = ""; 
     }
-};
-  
-  </script>
-</body>
-</html>
+  };
+
+  window.fetchLeaderboard = async function(squadName) {
+    const loading = document.getElementById('loadingState');
+    const unlocked = document.getElementById('unlockedStateLeaderboard');
+    if (loading) loading.classList.remove('hidden');
+    if (unlocked) unlocked.classList.add('hidden');
+
+    try {
+      const response = await fetch(window.API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'getLeaderboard', squad: squadName })
+      });
+      const result = await response.json();
+      
+      if (result.status === "success") {
+        window.renderLeaderboard(result.data);
+      } else {
+        if (loading) loading.innerText = "Failed to load data.";
+      }
+    } catch (err) {
+      if (loading) loading.innerText = "Connection error.";
+    }
+  };
+
+  window.renderLeaderboard = function(data) {
+    const tbody = document.getElementById('leaderboardBody');
+    const loading = document.getElementById('loadingState');
+    const unlocked = document.getElementById('unlockedStateLeaderboard');
+
+    if (!tbody) return;
+    tbody.innerHTML = "";
+
+    data.forEach((player, index) => {
+      const rank = index + 1;
+      
+      let rowClass = "border-b border-slate-100 last:border-none ";
+      if (rank === 1) rowClass += "bg-blue-50/50";
+      else if (rank % 2 === 0) rowClass += "bg-slate-50/50";
+      else rowClass += "bg-white";
+
+      const tr = document.createElement('tr');
+      tr.className = rowClass;
+      tr.innerHTML = `
+        <td class="py-2.5 pl-3 pr-1 text-slate-400 font-semibold">${rank}</td>
+        <td class="py-2.5 px-2 text-slate-800 font-medium">${player.name}</td>
+        <td class="py-2.5 px
