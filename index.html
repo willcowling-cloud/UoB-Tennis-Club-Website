@@ -78,17 +78,15 @@
   </main>
 
   <script>
-    // 1. Define the API URL globally
     window.API_URL = "https://script.google.com/macros/s/AKfycbwbcb5ureVKb1daLBFxFa6qb0WjhpOm4lAZj198W_-bIdnVsfTR6f9ybNezJ0CF51CpbQ/exec";
 
     const moduleCache = {};
 
-    // 2. Safe module loader
     async function loadModule(containerId, filePath, callback) {
       const container = document.getElementById(containerId);
       if (!container) return;
       
-      // If already loaded, just refresh its state and stop
+      // If already loaded, just refresh the data
       if (container.dataset.loaded === "true") {
         if (callback) callback();
         return;
@@ -96,7 +94,9 @@
 
       try {
         if (!moduleCache[filePath]) {
-          const res = await fetch(filePath);
+          // CACHE BUSTER: Forces the browser to get your latest GitHub changes
+          const cacheBuster = '?v=' + new Date().getTime();
+          const res = await fetch(filePath + cacheBuster);
           moduleCache[filePath] = await res.text();
         }
 
@@ -116,17 +116,17 @@
 
         container.dataset.loaded = "true";
         
-        // Give the browser 50ms to register the new scripts, then run the callback
+        // Wait briefly for scripts to register, then unlock
         setTimeout(() => {
           if (callback) callback();
-        }, 50);
+        }, 100);
 
       } catch (e) {
         console.error(`Error loading ${filePath}:`, e);
       }
     }
 
-    // 3. Broadcast login updates to any module that happens to be loaded
+    // Broadcasts login update to all active widgets
     window.triggerAppRefresh = function() {
       if (window.checkLtaLoginState) window.checkLtaLoginState();
       if (window.checkMatchplayLoginState) window.checkMatchplayLoginState();
@@ -134,39 +134,35 @@
       if (window.evaluateTimetableState) window.evaluateTimetableState();
     };
 
-    // 4. Lazy Load Tab Switcher
     function switchTab(tabName) {
-      // Hide all pages
       document.getElementById('page-home').classList.add('hidden');
       document.getElementById('page-matches').classList.add('hidden');
       document.getElementById('page-schedule').classList.add('hidden');
 
-      // Reset tab button colors
       document.getElementById('tab-home').classList.remove('active');
       document.getElementById('tab-matches').classList.remove('active');
       document.getElementById('tab-schedule').classList.remove('active');
 
-      // Show the selected page and highlight the button
       document.getElementById(`page-${tabName}`).classList.remove('hidden');
       document.getElementById(`tab-${tabName}`).classList.add('active');
 
-      // Only load/refresh the modules for the tab we just clicked
+      // Safe, wrapped callbacks to ensure they fire even on the first click
       if (tabName === 'home') {
          if (window.checkLtaLoginState) window.checkLtaLoginState();
       } else if (tabName === 'matches') {
-        loadModule('container-matchplay', 'matchplay.html', window.checkMatchplayLoginState);
-        loadModule('container-leaderboard', 'Leaderboard.html', window.checkLeaderboardLoginState);
+        loadModule('container-matchplay', 'matchplay.html', () => { if (window.checkMatchplayLoginState) window.checkMatchplayLoginState(); });
+        loadModule('container-leaderboard', 'Leaderboard.html', () => { if (window.checkLeaderboardLoginState) window.checkLeaderboardLoginState(); });
       } else if (tabName === 'schedule') {
-        loadModule('container-timetable', 'timetable.html', window.evaluateTimetableState);
+        loadModule('container-timetable', 'timetable.html', () => { if (window.evaluateTimetableState) window.evaluateTimetableState(); });
       }
     }
 
-    // 5. Boot sequence: ONLY load the home page to start
     window.onload = () => {
       loadModule('container-login', 'login.html');
       loadModule('container-lta', 'LTA.html');
     };
   </script>
+
 
 
 </body>
