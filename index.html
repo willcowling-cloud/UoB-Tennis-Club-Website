@@ -47,41 +47,58 @@
 
   <main class="max-w-5xl mx-auto px-4 py-6">
 
-    <div id="page-home" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
-        <div id="loginForm">
-          <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Player Portal Login</h3>
-          <div class="flex gap-2">
-            <input type="text" id="prefixInput" placeholder="Student Prefix (e.g., abc123)" class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 text-slate-900">
-            <button onclick="performLogin()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors">Log In</button>
+    <div id="page-home" class="flex flex-col gap-6">
+      
+      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+        <h3 class="text-base font-bold text-amber-900 m-0 mb-2 flex items-center gap-2">📢 Live Announcement</h3>
+        <div id="announcementLoading" class="text-xs text-amber-700/70 italic">Checking for notices...</div>
+        <div id="announcementContent" class="hidden text-sm text-amber-950 whitespace-pre-line leading-relaxed font-medium"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+          <div id="loginForm">
+            <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Player Portal Login</h3>
+            <div class="flex gap-2">
+              <input type="text" id="prefixInput" placeholder="Student Prefix (e.g., abc123)" class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 text-slate-900">
+              <button onclick="performLogin()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors">Log In</button>
+            </div>
+            <div id="loginStatus" class="text-xs text-red-600 font-medium mt-1.5 min-h-[16px]"></div>
           </div>
-          <div id="loginStatus" class="text-xs text-red-600 font-medium mt-1.5 min-h-[16px]"></div>
+          <div id="welcomeMessage" class="hidden flex items-center justify-between w-full">
+            <div>
+              <span class="text-emerald-600 font-bold text-sm flex items-center gap-1">✓ Logged In</span>
+              <p class="text-xs text-slate-600 m-0 mt-0.5">Welcome, <strong id="userDisp" class="text-slate-800"></strong> (<span id="squadDisp" class="italic"></span>)</p>
+            </div>
+            <button onclick="logout()" class="px-2.5 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold rounded-md shadow-xs cursor-pointer transition-colors">Log Out</button>
+          </div>
         </div>
-        <div id="welcomeMessage" class="hidden flex items-center justify-between w-full">
-          <div>
-            <span class="text-emerald-600 font-bold text-sm flex items-center gap-1">✓ Logged In</span>
-            <p class="text-xs text-slate-600 m-0 mt-0.5">Welcome, <strong id="userDisp" class="text-slate-800"></strong> (<span id="squadDisp" class="italic"></span>)</p>
+
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+          <h3 class="text-base font-bold text-slate-800 m-0 mb-2">LTA Registration</h3>
+          <div id="ltaLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+            🔑 Please log in via the portal widget to unlock LTA registration.
           </div>
-          <button onclick="logout()" class="px-2.5 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold rounded-md shadow-xs cursor-pointer transition-colors">Log Out</button>
+          <div id="ltaUnlocked" class="hidden">
+            <p class="text-xs text-slate-500 m-0 mb-3 leading-relaxed">
+              Please link your LTA number below. <a href="https://www.lta.org.uk/register/" target="_blank" class="text-blue-600 hover:underline font-semibold">Sign up for free here</a>.
+            </p>
+            <div class="flex gap-2">
+              <input type="text" id="ltaInput" placeholder="Enter LTA Number" class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500 text-slate-900">
+              <button onclick="submitLTA()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors">Save Number</button>
+            </div>
+            <div id="ltaStatus" class="text-xs font-medium mt-1.5 min-h-[16px]"></div>
+          </div>
         </div>
       </div>
 
       <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
-        <h3 class="text-base font-bold text-slate-800 m-0 mb-2">LTA Registration</h3>
-        <div id="ltaLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-           Please log in via the portal widget to unlock LTA registration.
-        </div>
-        <div id="ltaUnlocked" class="hidden">
-          <p class="text-xs text-slate-500 m-0 mb-3 leading-relaxed">
-            Please link your LTA number below. <a href="https://www.lta.org.uk/register/" target="_blank" class="text-blue-600 hover:underline font-semibold">Sign up for free here</a>.
-          </p>
-          <div class="flex gap-2">
-            <input type="text" id="ltaInput" placeholder="Enter LTA Number" class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500 text-slate-900">
-            <button onclick="submitLTA()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors">Save Number</button>
+        <h3 class="text-base font-bold text-slate-800 m-0 mb-4">Frequently Asked Questions</h3>
+        <div id="faqLoading" class="text-xs text-slate-500 italic">Loading FAQs...</div>
+        <div id="faqContainer" class="hidden flex flex-col gap-3">
           </div>
-          <div id="ltaStatus" class="text-xs font-medium mt-1.5 min-h-[16px]"></div>
-        </div>
       </div>
+      
     </div>
 
     <div id="page-matches" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -89,7 +106,7 @@
       <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-3">Log Match Result</h3>
         <div id="matchplayLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-           Please log in via the portal widget to record matches.
+          🔑 Please log in via the portal widget to record matches.
         </div>
         <div id="matchplayUnlocked" class="hidden flex flex-col gap-4">
           <div class="flex items-center justify-between bg-slate-100 p-1.5 rounded-lg border border-slate-200">
@@ -156,7 +173,7 @@
       <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Your Squad Timetable</h3>
         <div id="timetableLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-           Please log in via the portal widget to view your squad schedule.
+          🔑 Please log in via the portal widget to view your squad schedule.
         </div>
         <div id="timetableLoading" class="hidden text-xs text-slate-500 italic text-center py-4">
           Fetching your training schedule...
@@ -185,7 +202,10 @@
     let isDoubles = false;
 
     // --- 1. CORE LOGIC & STATE MANAGEMENT ---
-    window.onload = evaluateAppState;
+    window.onload = () => {
+      evaluateAppState();
+      loadPublicData(); // Fetch Announcements & FAQs immediately
+    };
 
     function evaluateAppState() {
       const prefix = localStorage.getItem('tc_prefix');
@@ -193,13 +213,11 @@
       const name = localStorage.getItem('tc_name');
 
       if (prefix && squad && name) {
-        // UI Updates for Logged-in State
         document.getElementById('loginForm').classList.add('hidden');
         document.getElementById('welcomeMessage').classList.remove('hidden');
         document.getElementById('userDisp').innerText = name;
         document.getElementById('squadDisp').innerText = squad;
 
-        // Unlock all widgets securely
         document.getElementById('ltaLocked').classList.add('hidden');
         document.getElementById('ltaUnlocked').classList.remove('hidden');
         
@@ -212,9 +230,9 @@
         
         document.getElementById('timetableLocked').classList.add('hidden');
       } else {
-        // Lock everything securely
         document.getElementById('loginForm').classList.remove('hidden');
         document.getElementById('welcomeMessage').classList.add('hidden');
+        
         document.getElementById('ltaLocked').classList.remove('hidden');
         document.getElementById('ltaUnlocked').classList.add('hidden');
         document.getElementById('matchplayLocked').classList.remove('hidden');
@@ -228,10 +246,10 @@
     }
 
     function switchTab(tabName) {
-      // Manage visual tabs
       document.getElementById('page-home').classList.add('hidden');
       document.getElementById('page-matches').classList.add('hidden');
       document.getElementById('page-schedule').classList.add('hidden');
+      
       document.getElementById('tab-home').classList.remove('active');
       document.getElementById('tab-matches').classList.remove('active');
       document.getElementById('tab-schedule').classList.remove('active');
@@ -239,7 +257,6 @@
       document.getElementById(`page-${tabName}`).classList.remove('hidden');
       document.getElementById(`tab-${tabName}`).classList.add('active');
 
-      // Fetch data for the tab if logged in and data is currently empty
       const squad = localStorage.getItem('tc_squad');
       if (squad) {
         if (tabName === 'matches') {
@@ -251,7 +268,69 @@
       }
     }
 
-    // --- 2. LOGIN WIDGET FUNCTIONS ---
+    // --- 2. PUBLIC DATA (Announcements & FAQs) ---
+    async function loadPublicData() {
+      // Fetch Announcement
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getAnnouncement' }) });
+        const result = await res.json();
+        const contentBox = document.getElementById('announcementContent');
+        const loadingBox = document.getElementById('announcementLoading');
+        
+        if (result.status === "success" && result.data && result.data.trim() !== "") {
+          contentBox.innerText = result.data;
+          contentBox.classList.remove('hidden');
+          loadingBox.classList.add('hidden');
+        } else {
+          loadingBox.innerText = "No current announcements.";
+        }
+      } catch (err) {
+        document.getElementById('announcementLoading').innerText = "Failed to load announcements.";
+      }
+
+      // Fetch FAQs
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getFAQs' }) });
+        const result = await res.json();
+        const container = document.getElementById('faqContainer');
+        const loading = document.getElementById('faqLoading');
+
+        if (result.status === "success" && result.data.length > 0) {
+          container.innerHTML = result.data.map((faq, index) => `
+            <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+              <button onclick="toggleFAQ(${index})" class="w-full text-left px-4 py-3 hover:bg-slate-100 flex justify-between items-center transition-colors cursor-pointer">
+                <span class="font-semibold text-sm text-slate-800">${faq.question}</span>
+                <svg id="faq-icon-${index}" class="w-5 h-5 text-slate-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              </button>
+              <div id="faq-answer-${index}" class="hidden px-4 py-3 bg-white text-sm text-slate-600 border-t border-slate-200 whitespace-pre-line">
+                ${faq.answer}
+              </div>
+            </div>
+          `).join('');
+          container.classList.remove('hidden');
+          loading.classList.add('hidden');
+        } else {
+          loading.innerText = "No FAQs available.";
+        }
+      } catch (err) {
+        document.getElementById('faqLoading').innerText = "Failed to load FAQs.";
+      }
+    }
+
+    function toggleFAQ(index) {
+      const answerDiv = document.getElementById(`faq-answer-${index}`);
+      const icon = document.getElementById(`faq-icon-${index}`);
+      
+      if (answerDiv.classList.contains('hidden')) {
+        answerDiv.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+      } else {
+        answerDiv.classList.add('hidden');
+        icon.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    // --- 3. LOGIN WIDGET FUNCTIONS ---
     async function performLogin() {
       const prefix = document.getElementById('prefixInput').value.trim().toLowerCase();
       const statusBox = document.getElementById('loginStatus');
@@ -269,7 +348,7 @@
           localStorage.setItem('tc_name', result.playerName);
           localStorage.setItem('tc_squad', result.squadName);
           statusBox.innerText = "";
-          evaluateAppState(); // Instantly unlocks everything!
+          evaluateAppState();
         } else {
           statusBox.classList.replace('text-slate-500', 'text-red-600');
           statusBox.innerText = result.message;
@@ -288,7 +367,7 @@
       evaluateAppState();
     }
 
-    // --- 3. LTA WIDGET FUNCTIONS ---
+    // --- 4. LTA WIDGET FUNCTIONS ---
     async function submitLTA() {
       const ltaNum = document.getElementById('ltaInput').value.trim();
       const statusBox = document.getElementById('ltaStatus');
@@ -314,7 +393,7 @@
       }
     }
 
-    // --- 4. MATCHPLAY WIDGET FUNCTIONS ---
+    // --- 5. MATCHPLAY WIDGET FUNCTIONS ---
     function setMatchType(doubles) {
       isDoubles = doubles;
       document.getElementById('singlesBtn').className = doubles ? "px-3 py-1 text-xs font-semibold rounded-md text-slate-500 hover:text-slate-800 transition-all" : "px-3 py-1 text-xs font-semibold rounded-md bg-white text-slate-800 shadow-xs transition-all";
@@ -336,7 +415,7 @@
             select.innerHTML = `<option value="">${select.options[0].text}</option>` + squadPlayers.map(p => `<option value="${p}">${p}</option>`).join('');
           });
         }
-      } catch (err) { console.error("Roster error", err); }
+      } catch (err) {}
     }
 
     async function submitMatch() {
@@ -368,7 +447,7 @@
         
         if (result.status === "success") {
           ['winner1', 'winner2', 'loser1', 'loser2', 'scoreSelect'].forEach(id => document.getElementById(id).value = "");
-          fetchLeaderboard(localStorage.getItem('tc_squad')); // Auto-refresh leaderboard
+          fetchLeaderboard(localStorage.getItem('tc_squad'));
         }
       } catch (err) {
         statusBox.className = "text-xs font-medium text-center text-red-600";
@@ -376,7 +455,7 @@
       }
     }
 
-    // --- 5. LEADERBOARD WIDGET FUNCTIONS ---
+    // --- 6. LEADERBOARD WIDGET FUNCTIONS ---
     async function fetchLeaderboard(squadName) {
       document.getElementById('leaderboardLoading').classList.remove('hidden');
       document.getElementById('leaderboardUnlocked').classList.add('hidden');
@@ -399,7 +478,7 @@
       } catch (err) {}
     }
 
-    // --- 6. TIMETABLE WIDGET FUNCTIONS ---
+    // --- 7. TIMETABLE WIDGET FUNCTIONS ---
     async function fetchTimetable(squadName) {
       document.getElementById('timetableLoading').classList.remove('hidden');
       document.getElementById('timetableUnlocked').classList.add('hidden');
