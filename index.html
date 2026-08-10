@@ -33,29 +33,38 @@
 
   <nav class="bg-white border-b border-slate-200 shadow-xs sticky top-0 z-50">
     <div class="max-w-5xl mx-auto px-2 py-2 flex items-center justify-center gap-2 overflow-x-auto no-scrollbar">
-      <button onclick="switchTab('home')" id="tab-home" class="nav-btn active px-6 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
+      <button onclick="switchTab('home')" id="tab-home" class="nav-btn active px-4 sm:px-6 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
         Home
       </button>
-      <button onclick="switchTab('matches')" id="tab-matches" class="nav-btn px-6 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
+      <button onclick="switchTab('matches')" id="tab-matches" class="nav-btn px-4 sm:px-6 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
         Matchplay
       </button>
-      <button onclick="switchTab('schedule')" id="tab-schedule" class="nav-btn px-6 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
+      <button onclick="switchTab('schedule')" id="tab-schedule" class="nav-btn px-4 sm:px-6 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
         Timetable
       </button>
-      <button onclick="switchTab('info')" id="tab-info" class="hidden nav-btn px-6 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
+      <button onclick="switchTab('info')" id="tab-info" class="nav-btn px-4 sm:px-6 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
         Info
       </button>
     </div>
   </nav>
 
-  <main class="max-w-5xl mx-auto px-4 py-6">
+  <div id="global-loader" class="flex flex-col items-center justify-center py-24 text-slate-400">
+    <div class="w-8 h-8 border-4 border-slate-300 border-t-blue-600 rounded-full animate-spin mb-3"></div>
+    <span class="text-xs font-semibold uppercase tracking-wider">Syncing with Hub...</span>
+  </div>
+
+  <main id="main-content" class="hidden max-w-5xl mx-auto px-4 py-6">
 
     <div id="page-home" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       
-      <div id="widget-announcement" class="hidden md:col-span-2 bg-amber-50 border border-amber-200 rounded-2xl p-5 sm:p-6 shadow-xs">
-        <h3 class="text-base font-bold text-amber-900 m-0 mb-2 flex items-center gap-2">📢 Live Announcement</h3>
-        <div id="announcementLoading" class="text-xs text-amber-700/70 italic">Checking for notices...</div>
-        <div id="announcementContent" class="hidden text-sm text-amber-950 whitespace-pre-line leading-relaxed font-medium"></div>
+      <div id="widget-announcement" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-1.5 h-full bg-blue-600"></div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-50 text-blue-600 text-xs">📢</span>
+          <h3 class="text-base font-bold text-slate-800 m-0">Announcement</h3>
+        </div>
+        <div id="announcementLoading" class="text-xs text-slate-400 italic pl-8">Checking for notices...</div>
+        <div id="announcementContent" class="hidden text-sm text-slate-600 whitespace-pre-line leading-relaxed font-normal pl-8"></div>
       </div>
 
       <div id="widget-login" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
@@ -93,10 +102,10 @@
         </div>
       </div>
 
-      <div id="widget-faq" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-faqHome" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-4">Frequently Asked Questions</h3>
-        <div id="faqLoading" class="text-xs text-slate-500 italic">Loading FAQs...</div>
-        <div id="faqContainer" class="hidden flex flex-col gap-3"></div>
+        <div id="faqLoadingHome" class="text-xs text-slate-500 italic">Loading FAQs...</div>
+        <div id="faqContainerHome" class="hidden flex flex-col gap-3"></div>
       </div>
       
     </div>
@@ -192,11 +201,14 @@
       </div>
     </div>
 
-    <div id="page-info" class="hidden max-w-3xl mx-auto">
-      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs text-center">
-        <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Club Information</h3>
-        <p class="text-sm text-slate-500">This section is currently under construction. (You can move FAQs or Committee info here later!)</p>
+    <div id="page-info" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      
+      <div id="widget-faqInfo" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+        <h3 class="text-base font-bold text-slate-800 m-0 mb-4">Frequently Asked Questions</h3>
+        <div id="faqLoadingInfo" class="text-xs text-slate-500 italic">Loading FAQs...</div>
+        <div id="faqContainerInfo" class="hidden flex flex-col gap-3"></div>
       </div>
+
     </div>
 
   </main>
@@ -210,12 +222,15 @@
 
     // --- 1. CORE LOGIC & STATE MANAGEMENT ---
     window.onload = async () => {
-      await loadAppConfig(); // Fetch layout settings first!
+      await loadAppConfig(); 
       evaluateAppState();
       loadPublicData();
+
+      // Hide global loader and reveal the main page container
+      document.getElementById('global-loader').classList.add('hidden');
+      document.getElementById('main-content').classList.remove('hidden');
     };
 
-    // Fetches the Control Panel settings and applies them
     async function loadAppConfig() {
       try {
         const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getConfig' }) });
@@ -223,45 +238,35 @@
         if (result.status === "success" && result.data) {
           const cfg = result.data;
 
-          // Apply Home Page toggles and order
+          // Apply all toggles & ordering
           toggleWidget('widget-announcement', cfg.announcement);
           toggleWidget('widget-login', cfg.login);
           toggleWidget('widget-lta', cfg.lta);
-          toggleWidget('widget-faq', cfg.faq);
-
-          // Apply other tab toggles
+          toggleWidget('widget-faqHome', cfg.faqHome);
+          
           toggleWidget('widget-recordMatch', cfg.recordMatch);
           toggleWidget('widget-leaderboard', cfg.leaderboard);
+          
           toggleWidget('widget-timetable', cfg.timetable);
-
-          // Handle Info Tab
-          if (cfg.infoPage && cfg.infoPage.visible) {
-            document.getElementById('tab-info').classList.remove('hidden');
-          } else {
-            document.getElementById('tab-info').classList.add('hidden');
-          }
+          
+          toggleWidget('widget-faqInfo', cfg.faqInfo);
         }
       } catch (err) {
-        console.warn("Could not load config dashboard. Using defaults.");
+        console.warn("Could not load config dashboard. Missing features.");
       }
     }
-  
+
     function toggleWidget(id, settings) {
       const el = document.getElementById(id);
       if (!el || !settings) return;
-    
-      // If set to false in Sheets, keep it hidden
+
       if (settings.visible === false) {
         el.classList.add('hidden');
       } else {
-        // If set to true, remove 'hidden' so it smooth-fades/appears into view
         el.classList.remove('hidden');
-        if (settings.order !== undefined) {
-          el.style.order = settings.order;
-        }
+        if (settings.order !== undefined) el.style.order = settings.order;
       }
     }
-
 
     function evaluateAppState() {
       const prefix = localStorage.getItem('tc_prefix');
@@ -302,15 +307,10 @@
     }
 
     function switchTab(tabName) {
-      document.getElementById('page-home').classList.add('hidden');
-      document.getElementById('page-matches').classList.add('hidden');
-      document.getElementById('page-schedule').classList.add('hidden');
-      document.getElementById('page-info').classList.add('hidden');
-      
-      document.getElementById('tab-home').classList.remove('active');
-      document.getElementById('tab-matches').classList.remove('active');
-      document.getElementById('tab-schedule').classList.remove('active');
-      document.getElementById('tab-info').classList.remove('active');
+      ['home', 'matches', 'schedule', 'info'].forEach(tab => {
+        document.getElementById(`page-${tab}`).classList.add('hidden');
+        document.getElementById(`tab-${tab}`).classList.remove('active');
+      });
       
       document.getElementById(`page-${tabName}`).classList.remove('hidden');
       document.getElementById(`tab-${tabName}`).classList.add('active');
@@ -328,6 +328,7 @@
 
     // --- 2. PUBLIC DATA (Announcements & FAQs) ---
     async function loadPublicData() {
+      // Load Announcement
       try {
         const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getAnnouncement' }) });
         const result = await res.json();
@@ -345,35 +346,50 @@
         }
       } catch (err) {}
 
+      // Load FAQs
       try {
         const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getFAQs' }) });
         const result = await res.json();
-        const container = document.getElementById('faqContainer');
-        const loading = document.getElementById('faqLoading');
+        
+        const loaderHome = document.getElementById('faqLoadingHome');
+        const loaderInfo = document.getElementById('faqLoadingInfo');
+        const containerHome = document.getElementById('faqContainerHome');
+        const containerInfo = document.getElementById('faqContainerInfo');
 
         if (result.status === "success" && result.data && result.data.length > 0) {
-          container.innerHTML = result.data.map((faq, index) => `
-            <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
-              <button onclick="toggleFAQ(${index})" class="w-full text-left px-4 py-3 hover:bg-slate-100 flex justify-between items-center transition-colors cursor-pointer">
-                <span class="font-semibold text-sm text-slate-800">${faq.question}</span>
-                <svg id="faq-icon-${index}" class="w-5 h-5 text-slate-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-              </button>
-              <div id="faq-answer-${index}" class="hidden px-4 py-3 bg-white text-sm text-slate-600 border-t border-slate-200 whitespace-pre-line">
-                ${faq.answer}
-              </div>
-            </div>
-          `).join('');
-          container.classList.remove('hidden');
-          loading.classList.add('hidden');
+          // Generate unique HTML blocks for both locations so their IDs don't clash
+          containerHome.innerHTML = generateFaqHTML(result.data, 'home');
+          containerInfo.innerHTML = generateFaqHTML(result.data, 'info');
+
+          containerHome.classList.remove('hidden');
+          containerInfo.classList.remove('hidden');
+          loaderHome.classList.add('hidden');
+          loaderInfo.classList.add('hidden');
         } else {
-          loading.innerText = "No FAQs available.";
+          loaderHome.innerText = "No FAQs available.";
+          loaderInfo.innerText = "No FAQs available.";
         }
       } catch (err) {}
     }
 
-    function toggleFAQ(index) {
-      const answerDiv = document.getElementById(`faq-answer-${index}`);
-      const icon = document.getElementById(`faq-icon-${index}`);
+    // Helper to generate FAQ with scoped IDs based on location
+    function generateFaqHTML(faqs, scope) {
+      return faqs.map((faq, index) => `
+        <div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-2xs">
+          <button onclick="toggleFAQ('${scope}', ${index})" class="w-full text-left px-5 py-4 hover:bg-slate-50 flex justify-between items-center transition-colors cursor-pointer">
+            <span class="font-semibold text-sm text-slate-800">${faq.question}</span>
+            <svg id="faq-icon-${scope}-${index}" class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+          <div id="faq-answer-${scope}-${index}" class="hidden px-5 pb-4 pt-1 text-sm text-slate-600 border-t border-slate-100 whitespace-pre-line leading-relaxed bg-slate-50/50">
+            ${faq.answer}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleFAQ(scope, index) {
+      const answerDiv = document.getElementById(`faq-answer-${scope}-${index}`);
+      const icon = document.getElementById(`faq-icon-${scope}-${index}`);
       
       if (answerDiv.classList.contains('hidden')) {
         answerDiv.classList.remove('hidden');
