@@ -277,8 +277,11 @@
         const contentBox = document.getElementById('announcementContent');
         const loadingBox = document.getElementById('announcementLoading');
         
-        if (result.status === "success" && result.data && result.data.trim() !== "") {
-          contentBox.innerText = result.data;
+        // Flexibly checks for data OR message string
+        const announcementText = result.data || result.message;
+
+        if (result.status === "success" && announcementText && String(announcementText).trim() !== "") {
+          contentBox.innerText = announcementText;
           contentBox.classList.remove('hidden');
           loadingBox.classList.add('hidden');
         } else {
@@ -295,7 +298,7 @@
         const container = document.getElementById('faqContainer');
         const loading = document.getElementById('faqLoading');
 
-        if (result.status === "success" && result.data.length > 0) {
+        if (result.status === "success" && result.data && result.data.length > 0) {
           container.innerHTML = result.data.map((faq, index) => `
             <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
               <button onclick="toggleFAQ(${index})" class="w-full text-left px-4 py-3 hover:bg-slate-100 flex justify-between items-center transition-colors cursor-pointer">
