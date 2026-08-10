@@ -52,13 +52,13 @@
 
     <div id="page-home" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       
-      <div id="widget-announcement" class="md:col-span-2 bg-amber-50 border border-amber-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-announcement" class="hidden md:col-span-2 bg-amber-50 border border-amber-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-amber-900 m-0 mb-2 flex items-center gap-2">📢 Live Announcement</h3>
         <div id="announcementLoading" class="text-xs text-amber-700/70 italic">Checking for notices...</div>
         <div id="announcementContent" class="hidden text-sm text-amber-950 whitespace-pre-line leading-relaxed font-medium"></div>
       </div>
 
-      <div id="widget-login" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-login" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <div id="loginForm">
           <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Player Portal Login</h3>
           <div class="flex gap-2">
@@ -76,7 +76,7 @@
         </div>
       </div>
 
-      <div id="widget-lta" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-lta" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-2">LTA Registration</h3>
         <div id="ltaLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
           🔑 Please log in via the portal widget to unlock LTA registration.
@@ -93,7 +93,7 @@
         </div>
       </div>
 
-      <div id="widget-faq" class="md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-faq" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-4">Frequently Asked Questions</h3>
         <div id="faqLoading" class="text-xs text-slate-500 italic">Loading FAQs...</div>
         <div id="faqContainer" class="hidden flex flex-col gap-3"></div>
@@ -103,7 +103,7 @@
 
     <div id="page-matches" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       
-      <div id="widget-recordMatch" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-recordMatch" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-3">Log Match Result</h3>
         <div id="matchplayLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
           🔑 Please log in via the portal widget to record matches.
@@ -141,7 +141,7 @@
         </div>
       </div>
 
-      <div id="widget-leaderboard" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-leaderboard" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <div class="flex justify-between items-end mb-4">
           <h3 class="text-base font-bold text-slate-800 m-0">Live Standings</h3>
           <span id="squadNameDisplay" class="text-xs font-semibold text-blue-600 uppercase tracking-wider hidden"></span>
@@ -170,7 +170,7 @@
     </div>
 
     <div id="page-schedule" class="hidden max-w-3xl mx-auto">
-      <div id="widget-timetable" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-timetable" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Your Squad Timetable</h3>
         <div id="timetableLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
           🔑 Please log in via the portal widget to view your squad schedule.
@@ -245,17 +245,23 @@
         console.warn("Could not load config dashboard. Using defaults.");
       }
     }
-
+  
     function toggleWidget(id, settings) {
       const el = document.getElementById(id);
       if (!el || !settings) return;
+    
+      // If set to false in Sheets, keep it hidden
       if (settings.visible === false) {
-        el.style.display = 'none';
+        el.classList.add('hidden');
       } else {
-        el.style.display = '';
-        if (settings.order !== undefined) el.style.order = settings.order;
+        // If set to true, remove 'hidden' so it smooth-fades/appears into view
+        el.classList.remove('hidden');
+        if (settings.order !== undefined) {
+          el.style.order = settings.order;
+        }
       }
     }
+
 
     function evaluateAppState() {
       const prefix = localStorage.getItem('tc_prefix');
