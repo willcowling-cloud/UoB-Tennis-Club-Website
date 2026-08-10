@@ -329,6 +329,7 @@
     // --- 2. PUBLIC DATA (Announcements & FAQs) ---
     async function loadPublicData() {
       // Load Announcement
+      // Load Announcement
       try {
         const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getAnnouncement' }) });
         const result = await res.json();
@@ -336,15 +337,19 @@
         const loadingBox = document.getElementById('announcementLoading');
         
         const announcementText = result.data || result.message;
-
+      
         if (result.status === "success" && announcementText && String(announcementText).trim() !== "") {
-          contentBox.innerText = announcementText;
+          // Automatically turn raw URLs into clickable HTML links
+          const formattedText = autoLinkText(announcementText);
+          
+          contentBox.innerHTML = formattedText; // Using innerHTML instead of innerText
           contentBox.classList.remove('hidden');
           loadingBox.classList.add('hidden');
         } else {
           loadingBox.innerText = "No current announcements.";
         }
       } catch (err) {}
+
 
       // Load FAQs
       try {
@@ -541,6 +546,13 @@
         }
       } catch (err) {}
     }
+
+        // Converts URLs in plain text into clickable links
+    function autoLinkText(text) {
+      const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+      return text.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold underline hover:text-blue-800 transition-colors">$1</a>');
+    }
+
 
     // --- 7. TIMETABLE WIDGET FUNCTIONS ---
     async function fetchTimetable(squadName) {
