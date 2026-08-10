@@ -42,68 +42,68 @@
       <button onclick="switchTab('schedule')" id="tab-schedule" class="nav-btn px-6 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
         Timetable
       </button>
+      <button onclick="switchTab('info')" id="tab-info" class="hidden nav-btn px-6 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
+        Info
+      </button>
     </div>
   </nav>
 
   <main class="max-w-5xl mx-auto px-4 py-6">
 
-    <div id="page-home" class="flex flex-col gap-6">
+    <div id="page-home" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       
-      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-announcement" class="md:col-span-2 bg-amber-50 border border-amber-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-amber-900 m-0 mb-2 flex items-center gap-2">📢 Live Announcement</h3>
         <div id="announcementLoading" class="text-xs text-amber-700/70 italic">Checking for notices...</div>
         <div id="announcementContent" class="hidden text-sm text-amber-950 whitespace-pre-line leading-relaxed font-medium"></div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
-          <div id="loginForm">
-            <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Player Portal Login</h3>
-            <div class="flex gap-2">
-              <input type="text" id="prefixInput" placeholder="Student Prefix (e.g., abc123)" class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 text-slate-900">
-              <button onclick="performLogin()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors">Log In</button>
-            </div>
-            <div id="loginStatus" class="text-xs text-red-600 font-medium mt-1.5 min-h-[16px]"></div>
+      <div id="widget-login" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+        <div id="loginForm">
+          <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Player Portal Login</h3>
+          <div class="flex gap-2">
+            <input type="text" id="prefixInput" placeholder="Student Prefix (e.g., abc123)" class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 text-slate-900">
+            <button onclick="performLogin()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors">Log In</button>
           </div>
-          <div id="welcomeMessage" class="hidden flex items-center justify-between w-full">
-            <div>
-              <span class="text-emerald-600 font-bold text-sm flex items-center gap-1">✓ Logged In</span>
-              <p class="text-xs text-slate-600 m-0 mt-0.5">Welcome, <strong id="userDisp" class="text-slate-800"></strong> (<span id="squadDisp" class="italic"></span>)</p>
-            </div>
-            <button onclick="logout()" class="px-2.5 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold rounded-md shadow-xs cursor-pointer transition-colors">Log Out</button>
-          </div>
+          <div id="loginStatus" class="text-xs text-red-600 font-medium mt-1.5 min-h-[16px]"></div>
         </div>
-
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
-          <h3 class="text-base font-bold text-slate-800 m-0 mb-2">LTA Registration</h3>
-          <div id="ltaLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-            🔑 Please log in via the portal widget to unlock LTA registration.
+        <div id="welcomeMessage" class="hidden flex items-center justify-between w-full">
+          <div>
+            <span class="text-emerald-600 font-bold text-sm flex items-center gap-1">✓ Logged In</span>
+            <p class="text-xs text-slate-600 m-0 mt-0.5">Welcome, <strong id="userDisp" class="text-slate-800"></strong> (<span id="squadDisp" class="italic"></span>)</p>
           </div>
-          <div id="ltaUnlocked" class="hidden">
-            <p class="text-xs text-slate-500 m-0 mb-3 leading-relaxed">
-              Please link your LTA number below. <a href="https://www.lta.org.uk/register/" target="_blank" class="text-blue-600 hover:underline font-semibold">Sign up for free here</a>.
-            </p>
-            <div class="flex gap-2">
-              <input type="text" id="ltaInput" placeholder="Enter LTA Number" class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500 text-slate-900">
-              <button onclick="submitLTA()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors">Save Number</button>
-            </div>
-            <div id="ltaStatus" class="text-xs font-medium mt-1.5 min-h-[16px]"></div>
-          </div>
+          <button onclick="logout()" class="px-2.5 py-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold rounded-md shadow-xs cursor-pointer transition-colors">Log Out</button>
         </div>
       </div>
 
-      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-lta" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+        <h3 class="text-base font-bold text-slate-800 m-0 mb-2">LTA Registration</h3>
+        <div id="ltaLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+          🔑 Please log in via the portal widget to unlock LTA registration.
+        </div>
+        <div id="ltaUnlocked" class="hidden">
+          <p class="text-xs text-slate-500 m-0 mb-3 leading-relaxed">
+            Please link your LTA number below. <a href="https://www.lta.org.uk/register/" target="_blank" class="text-blue-600 hover:underline font-semibold">Sign up for free here</a>.
+          </p>
+          <div class="flex gap-2">
+            <input type="text" id="ltaInput" placeholder="Enter LTA Number" class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500 text-slate-900">
+            <button onclick="submitLTA()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors">Save Number</button>
+          </div>
+          <div id="ltaStatus" class="text-xs font-medium mt-1.5 min-h-[16px]"></div>
+        </div>
+      </div>
+
+      <div id="widget-faq" class="md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-4">Frequently Asked Questions</h3>
         <div id="faqLoading" class="text-xs text-slate-500 italic">Loading FAQs...</div>
-        <div id="faqContainer" class="hidden flex flex-col gap-3">
-          </div>
+        <div id="faqContainer" class="hidden flex flex-col gap-3"></div>
       </div>
       
     </div>
 
     <div id="page-matches" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       
-      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-recordMatch" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-3">Log Match Result</h3>
         <div id="matchplayLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
           🔑 Please log in via the portal widget to record matches.
@@ -141,7 +141,7 @@
         </div>
       </div>
 
-      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-leaderboard" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <div class="flex justify-between items-end mb-4">
           <h3 class="text-base font-bold text-slate-800 m-0">Live Standings</h3>
           <span id="squadNameDisplay" class="text-xs font-semibold text-blue-600 uppercase tracking-wider hidden"></span>
@@ -170,7 +170,7 @@
     </div>
 
     <div id="page-schedule" class="hidden max-w-3xl mx-auto">
-      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-timetable" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Your Squad Timetable</h3>
         <div id="timetableLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
           🔑 Please log in via the portal widget to view your squad schedule.
@@ -192,6 +192,13 @@
       </div>
     </div>
 
+    <div id="page-info" class="hidden max-w-3xl mx-auto">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs text-center">
+        <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Club Information</h3>
+        <p class="text-sm text-slate-500">This section is currently under construction. (You can move FAQs or Committee info here later!)</p>
+      </div>
+    </div>
+
   </main>
 
   <script>
@@ -202,10 +209,53 @@
     let isDoubles = false;
 
     // --- 1. CORE LOGIC & STATE MANAGEMENT ---
-    window.onload = () => {
+    window.onload = async () => {
+      await loadAppConfig(); // Fetch layout settings first!
       evaluateAppState();
-      loadPublicData(); // Fetch Announcements & FAQs immediately
+      loadPublicData();
     };
+
+    // Fetches the Control Panel settings and applies them
+    async function loadAppConfig() {
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getConfig' }) });
+        const result = await res.json();
+        if (result.status === "success" && result.data) {
+          const cfg = result.data;
+
+          // Apply Home Page toggles and order
+          toggleWidget('widget-announcement', cfg.announcement);
+          toggleWidget('widget-login', cfg.login);
+          toggleWidget('widget-lta', cfg.lta);
+          toggleWidget('widget-faq', cfg.faq);
+
+          // Apply other tab toggles
+          toggleWidget('widget-recordMatch', cfg.recordMatch);
+          toggleWidget('widget-leaderboard', cfg.leaderboard);
+          toggleWidget('widget-timetable', cfg.timetable);
+
+          // Handle Info Tab
+          if (cfg.infoPage && cfg.infoPage.visible) {
+            document.getElementById('tab-info').classList.remove('hidden');
+          } else {
+            document.getElementById('tab-info').classList.add('hidden');
+          }
+        }
+      } catch (err) {
+        console.warn("Could not load config dashboard. Using defaults.");
+      }
+    }
+
+    function toggleWidget(id, settings) {
+      const el = document.getElementById(id);
+      if (!el || !settings) return;
+      if (settings.visible === false) {
+        el.style.display = 'none';
+      } else {
+        el.style.display = '';
+        if (settings.order !== undefined) el.style.order = settings.order;
+      }
+    }
 
     function evaluateAppState() {
       const prefix = localStorage.getItem('tc_prefix');
@@ -249,10 +299,12 @@
       document.getElementById('page-home').classList.add('hidden');
       document.getElementById('page-matches').classList.add('hidden');
       document.getElementById('page-schedule').classList.add('hidden');
+      document.getElementById('page-info').classList.add('hidden');
       
       document.getElementById('tab-home').classList.remove('active');
       document.getElementById('tab-matches').classList.remove('active');
       document.getElementById('tab-schedule').classList.remove('active');
+      document.getElementById('tab-info').classList.remove('active');
       
       document.getElementById(`page-${tabName}`).classList.remove('hidden');
       document.getElementById(`tab-${tabName}`).classList.add('active');
@@ -270,14 +322,12 @@
 
     // --- 2. PUBLIC DATA (Announcements & FAQs) ---
     async function loadPublicData() {
-      // Fetch Announcement
       try {
         const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getAnnouncement' }) });
         const result = await res.json();
         const contentBox = document.getElementById('announcementContent');
         const loadingBox = document.getElementById('announcementLoading');
         
-        // Flexibly checks for data OR message string
         const announcementText = result.data || result.message;
 
         if (result.status === "success" && announcementText && String(announcementText).trim() !== "") {
@@ -287,11 +337,8 @@
         } else {
           loadingBox.innerText = "No current announcements.";
         }
-      } catch (err) {
-        document.getElementById('announcementLoading').innerText = "Failed to load announcements.";
-      }
+      } catch (err) {}
 
-      // Fetch FAQs
       try {
         const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getFAQs' }) });
         const result = await res.json();
@@ -315,9 +362,7 @@
         } else {
           loading.innerText = "No FAQs available.";
         }
-      } catch (err) {
-        document.getElementById('faqLoading').innerText = "Failed to load FAQs.";
-      }
+      } catch (err) {}
     }
 
     function toggleFAQ(index) {
@@ -376,10 +421,7 @@
       const statusBox = document.getElementById('ltaStatus');
       const prefix = localStorage.getItem('tc_prefix');
       
-      if (!ltaNum) {
-        statusBox.className = "text-xs font-medium mt-1.5 text-red-600";
-        return statusBox.innerText = "Please input your LTA number.";
-      }
+      if (!ltaNum) return statusBox.innerText = "Please input your LTA number.";
       
       statusBox.className = "text-xs font-medium mt-1.5 text-slate-500";
       statusBox.innerText = "Saving...";
@@ -452,10 +494,7 @@
           ['winner1', 'winner2', 'loser1', 'loser2', 'scoreSelect'].forEach(id => document.getElementById(id).value = "");
           fetchLeaderboard(localStorage.getItem('tc_squad'));
         }
-      } catch (err) {
-        statusBox.className = "text-xs font-medium text-center text-red-600";
-        statusBox.innerText = "Connection failed.";
-      }
+      } catch (err) {}
     }
 
     // --- 6. LEADERBOARD WIDGET FUNCTIONS ---
