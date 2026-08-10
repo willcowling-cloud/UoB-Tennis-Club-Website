@@ -64,7 +64,7 @@
           <h3 class="text-base font-bold text-slate-800 m-0">Announcement</h3>
         </div>
         <div id="announcementLoading" class="text-xs text-slate-400 italic pl-8">Checking for notices...</div>
-        <div id="announcementContent" class="hidden text-sm text-slate-600 whitespace-pre-line leading-relaxed font-normal pl-8"></div>
+        <div id="announcementContent" class="hidden text-sm text-slate-600 whitespace-pre-line leading-snug font-normal pl-8"></div>
       </div>
 
       <div id="widget-login" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
@@ -95,7 +95,14 @@
             Please link your LTA number below. <a href="https://www.lta.org.uk/register/" target="_blank" class="text-blue-600 hover:underline font-semibold">Sign up for free here</a>.
           </p>
           <div class="flex gap-2">
-            <input type="text" id="ltaInput" placeholder="Enter LTA Number" class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500 text-slate-900">
+            <input 
+              type="text" 
+              id="ltaInput" 
+              inputmode="numeric" 
+              maxlength="9" 
+              placeholder="Enter 9-digit LTA Number" 
+              class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500 text-slate-900"
+            >
             <button onclick="submitLTA()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors">Save Number</button>
           </div>
           <div id="ltaStatus" class="text-xs font-medium mt-1.5 min-h-[16px]"></div>
@@ -226,7 +233,7 @@
       evaluateAppState();
       loadPublicData();
 
-      // Hide global loader and reveal the main page container
+      // Smoothly hide loader and reveal the main page structure
       document.getElementById('global-loader').classList.add('hidden');
       document.getElementById('main-content').classList.remove('hidden');
     };
@@ -329,7 +336,6 @@
     // --- 2. PUBLIC DATA (Announcements & FAQs) ---
     async function loadPublicData() {
       // Load Announcement
-      // Load Announcement
       try {
         const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getAnnouncement' }) });
         const result = await res.json();
@@ -337,19 +343,15 @@
         const loadingBox = document.getElementById('announcementLoading');
         
         const announcementText = result.data || result.message;
-      
+
         if (result.status === "success" && announcementText && String(announcementText).trim() !== "") {
-          // Automatically turn raw URLs into clickable HTML links
-          const formattedText = autoLinkText(announcementText);
-          
-          contentBox.innerHTML = formattedText; // Using innerHTML instead of innerText
+          contentBox.innerHTML = autoLinkText(announcementText);
           contentBox.classList.remove('hidden');
           loadingBox.classList.add('hidden');
         } else {
           loadingBox.innerText = "No current announcements.";
         }
       } catch (err) {}
-
 
       // Load FAQs
       try {
@@ -362,7 +364,6 @@
         const containerInfo = document.getElementById('faqContainerInfo');
 
         if (result.status === "success" && result.data && result.data.length > 0) {
-          // Generate unique HTML blocks for both locations so their IDs don't clash
           containerHome.innerHTML = generateFaqHTML(result.data, 'home');
           containerInfo.innerHTML = generateFaqHTML(result.data, 'info');
 
@@ -377,7 +378,13 @@
       } catch (err) {}
     }
 
-    // Helper to generate FAQ with scoped IDs based on location
+    // Converts plain URLs into clickable links
+    function autoLinkText(text) {
+      const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+      return text.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold underline hover:text-blue-800 transition-colors">$1</a>');
+    }
+
+    // Helper to generate FAQ HTML with scope-isolated IDs
     function generateFaqHTML(faqs, scope) {
       return faqs.map((faq, index) => `
         <div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-2xs">
@@ -426,7 +433,7 @@
           evaluateAppState();
         } else {
           statusBox.classList.replace('text-slate-500', 'text-red-600');
-          statusBox.innerText = result.message;
+          statusBox.innerText = result.message || "Invalid credentials.";
         }
       } catch (err) {
         statusBox.classList.replace('text-slate-500', 'text-red-600');
@@ -444,21 +451,39 @@
 
     // --- 4. LTA WIDGET FUNCTIONS ---
     async function submitLTA() {
-      const ltaNum = document.getElementById('ltaInput').value.trim();
+      const ltaInput = document.getElementById('ltaInput');
+      const ltaNum = ltaInput.value.trim();
       const statusBox = document.getElementById('ltaStatus');
       const prefix = localStorage.getItem('tc_prefix');
-      
-      if (!ltaNum) return statusBox.innerText = "Please input your LTA number.";
-      
+
+      // Strict Regex: Exact 9 numeric digits
+      const ltaRegex = /^\d{9}$/;
+
+      if (!ltaNum) {
+        statusBox.className = "text-xs font-medium mt-1.5 text-red-600";
+        return statusBox.innerText = "Please enter your LTA number.";
+      }
+
+      if (!ltaRegex.test(ltaNum)) {
+        statusBox.className = "text-xs font-medium mt-1.5 text-red-600";
+        return statusBox.innerText = "Invalid format: LTA number must be exactly 9 digits.";
+      }
+
       statusBox.className = "text-xs font-medium mt-1.5 text-slate-500";
       statusBox.innerText = "Saving...";
 
       try {
-        const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'submitLTA', prefix, lta: ltaNum }) });
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'submitLTA', prefix, lta: ltaNum })
+        });
         const result = await response.json();
-        statusBox.className = `text-xs font-medium mt-1.5 ${result.status === "success" ? "text-emerald-600" : "text-red-600"}`;
-        statusBox.innerText = result.message;
-        if (result.status === "success") document.getElementById('ltaInput').value = "";
+
+        const isSuccess = result.status === "success";
+        statusBox.className = `text-xs font-medium mt-1.5 ${isSuccess ? "text-emerald-600" : "text-red-600"}`;
+        statusBox.innerText = result.message || (isSuccess ? "LTA Number saved successfully!" : "Failed to save LTA number.");
+
+        if (isSuccess) ltaInput.value = "";
       } catch (err) {
         statusBox.className = "text-xs font-medium mt-1.5 text-red-600";
         statusBox.innerText = "Connection failed.";
@@ -514,14 +539,19 @@
           body: JSON.stringify({ action: 'submitMatchResult', squad: localStorage.getItem('tc_squad'), winners: isDoubles ? [w1, w2] : [w1], losers: isDoubles ? [l1, l2] : [l1], score })
         });
         const result = await res.json();
-        statusBox.className = `text-xs font-medium text-center ${result.status === "success" ? "text-emerald-600" : "text-red-600"}`;
-        statusBox.innerText = result.message;
         
-        if (result.status === "success") {
+        const isSuccess = result.status === "success";
+        statusBox.className = `text-xs font-medium text-center ${isSuccess ? "text-emerald-600" : "text-red-600"}`;
+        statusBox.innerText = result.message || (isSuccess ? "Match result saved!" : "Failed to submit match.");
+        
+        if (isSuccess) {
           ['winner1', 'winner2', 'loser1', 'loser2', 'scoreSelect'].forEach(id => document.getElementById(id).value = "");
           fetchLeaderboard(localStorage.getItem('tc_squad'));
         }
-      } catch (err) {}
+      } catch (err) {
+        statusBox.className = "text-xs font-medium text-center text-red-600";
+        statusBox.innerText = "Network error submitting match.";
+      }
     }
 
     // --- 6. LEADERBOARD WIDGET FUNCTIONS ---
@@ -546,13 +576,6 @@
         }
       } catch (err) {}
     }
-
-        // Converts URLs in plain text into clickable links
-    function autoLinkText(text) {
-      const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-      return text.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold underline hover:text-blue-800 transition-colors">$1</a>');
-    }
-
 
     // --- 7. TIMETABLE WIDGET FUNCTIONS ---
     async function fetchTimetable(squadName) {
