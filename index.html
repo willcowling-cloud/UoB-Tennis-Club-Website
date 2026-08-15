@@ -2,17 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  
-  <!-- PWA & MOBILE APP TAGS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0f172a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="UoB Tennis">
-  <meta name="mobile-web-app-capable" content="yes">
-  <link rel="icon" type="image/jpeg" href="logo.jpg">
-  <link rel="apple-touch-icon" href="logo.jpg">
-
   <title>UoB Tennis Members Hub</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
@@ -27,21 +18,19 @@
 </head>
 <body class="bg-slate-100 font-sans text-slate-900 min-h-screen pb-12 selection:bg-blue-600 selection:text-white">
 
-  <!-- HERO BANNER -->
   <section class="relative bg-slate-950 overflow-hidden border-b border-slate-800">
     <div class="absolute inset-0 z-0">
       <img src="banner.jpg" alt="Tennis Courts" class="w-full h-full object-cover object-center opacity-45 filter brightness-90">
       <div class="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/40 to-slate-950/90"></div>
     </div>
     <div class="relative z-10 max-w-5xl mx-auto px-4 py-10 sm:py-14 flex flex-col items-center justify-center text-center">
-      <img src="logo.jpg" alt="UoB Crest" class="h-16 sm:h-20 w-auto object-contain mb-3 drop-shadow-lg rounded-full">
+      <img src="logo.jpg" alt="UoB Crest" class="h-16 sm:h-20 w-auto object-contain mb-3 drop-shadow-lg">
       <h1 class="text-xl sm:text-3xl font-black tracking-wider text-white uppercase drop-shadow-md">
         UOB TENNIS MEMBERS HUB
       </h1>
     </div>
   </section>
 
-  <!-- PERMANENT 4-TAB NAVIGATION -->
   <nav class="bg-white border-b border-slate-200 shadow-xs sticky top-0 z-50">
     <div class="max-w-5xl mx-auto px-2 py-2 flex items-center justify-center gap-2 overflow-x-auto no-scrollbar">
       <button onclick="switchTab('home')" id="tab-home" class="nav-btn active px-4 sm:px-6 py-2 rounded-lg text-xs sm:text-sm font-bold text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
@@ -59,36 +48,31 @@
     </div>
   </nav>
 
-  <!-- GLOBAL LOADING STATE -->
   <div id="global-loader" class="flex flex-col items-center justify-center py-24 text-slate-400">
     <div class="w-8 h-8 border-4 border-slate-300 border-t-blue-600 rounded-full animate-spin mb-3"></div>
     <span class="text-xs font-semibold uppercase tracking-wider">Syncing with Hub...</span>
   </div>
 
-  <!-- MAIN CONTENT AREA -->
   <main id="main-content" class="hidden max-w-5xl mx-auto px-4 py-6">
 
-    <!-- PAGE 1: HOME -->
     <div id="page-home" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       
-      <!-- NOTICEBOARD -->
       <div id="widget-announcement" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden">
         <div class="absolute top-0 left-0 w-1.5 h-full bg-blue-600"></div>
         <div class="flex items-center gap-2 mb-2">
           <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-50 text-blue-600 text-xs">📢</span>
           <h3 class="text-base font-bold text-slate-800 m-0">Announcement</h3>
         </div>
-        <div id="announcementLoading" class="text-xs text-slate-400 italic mt-2">Checking for notices...</div>
-        <div id="announcementContent" class="hidden text-sm text-slate-600 whitespace-pre-line leading-snug font-normal mt-2"></div>
+        <div id="announcementLoading" class="text-xs text-slate-400 italic pl-8">Checking for notices...</div>
+        <div id="announcementContent" class="hidden text-sm text-slate-600 whitespace-pre-line leading-snug font-normal pl-8"></div>
       </div>
 
-      <!-- LOGIN WIDGET -->
       <div id="widget-login" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <div id="loginForm">
           <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Player Portal Login</h3>
           <div class="flex gap-2">
             <input type="text" id="prefixInput" placeholder="Student Prefix (e.g., abc123)" class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 text-slate-900">
-            <button id="loginBtn" onclick="performLogin()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-all min-w-[80px] flex items-center justify-center">Log In</button>
+            <button onclick="performLogin()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors">Log In</button>
           </div>
           <div id="loginStatus" class="text-xs text-red-600 font-medium mt-1.5 min-h-[16px]"></div>
         </div>
@@ -101,7 +85,6 @@
         </div>
       </div>
 
-      <!-- LTA WIDGET -->
       <div id="widget-lta" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-2">LTA Registration</h3>
         <div id="ltaLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
@@ -120,13 +103,12 @@
               placeholder="Enter 9-digit LTA Number" 
               class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500 text-slate-900"
             >
-            <button id="ltaBtn" onclick="submitLTA()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-all min-w-[120px] flex items-center justify-center">Save Number</button>
+            <button onclick="submitLTA()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors">Save Number</button>
           </div>
           <div id="ltaStatus" class="text-xs font-medium mt-1.5 min-h-[16px]"></div>
         </div>
       </div>
 
-      <!-- FAQ SECTION (HOME) -->
       <div id="widget-faqHome" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-4">Frequently Asked Questions</h3>
         <div id="faqLoadingHome" class="text-xs text-slate-500 italic">Loading FAQs...</div>
@@ -135,10 +117,8 @@
       
     </div>
 
-    <!-- PAGE 2: MATCHPLAY & LEADERBOARD -->
     <div id="page-matches" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       
-      <!-- MATCHPLAY WIDGET -->
       <div id="widget-recordMatch" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-3">Log Match Result</h3>
         <div id="matchplayLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
@@ -172,12 +152,11 @@
               <option value="2-0">2-0 (Sets)</option><option value="2-1">2-1 (Sets)</option>
             </select>
           </div>
-          <button id="matchBtn" onclick="submitMatch()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-all mt-1 flex items-center justify-center min-h-[44px]">Submit Result</button>
+          <button onclick="submitMatch()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors mt-1">Submit Result</button>
           <div id="matchStatusMsg" class="text-xs font-medium text-center min-h-[16px]"></div>
         </div>
       </div>
 
-      <!-- LEADERBOARD WIDGET -->
       <div id="widget-leaderboard" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <div class="flex justify-between items-end mb-4">
           <h3 class="text-base font-bold text-slate-800 m-0">Live Standings</h3>
@@ -206,74 +185,100 @@
       </div>
     </div>
 
-    <!-- PAGE 3: TIMETABLE -->
-    <div id="page-schedule" class="hidden">
-      <!-- PERSONALIZED SCHEDULE WIDGET -->
-      <div id="widget-personalSchedule" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs max-w-2xl mx-auto">
-        <h3 class="text-base font-bold text-slate-800 m-0 mb-4">Your Squad Timetable</h3>
-        <div id="scheduleLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
-          🔑 Please log in via the portal widget to view your squad's personalized timetable.
+    <div id="page-schedule" class="hidden max-w-3xl mx-auto">
+      <div id="widget-timetable" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+        <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Your Squad Timetable</h3>
+        <div id="timetableLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+          🔑 Please log in via the portal widget to view your squad schedule.
         </div>
-        <div id="scheduleUnlocked" class="hidden flex flex-col gap-3"></div>
+        <div id="timetableLoading" class="hidden text-xs text-slate-500 italic text-center py-4">
+          Fetching your training schedule...
+        </div>
+        <div id="timetableUnlocked" class="hidden overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200">
+                <th class="p-2.5 font-semibold text-slate-600">Session</th>
+                <th class="p-2.5 font-semibold text-slate-600">Day & Time</th>
+              </tr>
+            </thead>
+            <tbody id="timetableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
-    <!-- PAGE 4: INFO -->
-    <div id="page-info" class="hidden">
-      <!-- LINKS WIDGET -->
-      <div id="widget-links" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs max-w-2xl mx-auto mb-6">
-        <h3 class="text-base font-bold text-slate-800 m-0 mb-4">Important Links</h3>
-        <div id="linksLoading" class="text-xs text-slate-500 italic">Loading links...</div>
-        <div id="linksContainer" class="hidden flex flex-col gap-2"></div>
-      </div>
-
-      <!-- FAQ SECTION (INFO PAGE) -->
-      <div id="widget-faqInfo" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs max-w-2xl mx-auto">
+    <div id="page-info" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      
+      <div id="widget-faqInfo" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-4">Frequently Asked Questions</h3>
         <div id="faqLoadingInfo" class="text-xs text-slate-500 italic">Loading FAQs...</div>
         <div id="faqContainerInfo" class="hidden flex flex-col gap-3"></div>
       </div>
+
     </div>
 
   </main>
 
   <script>
-    // --- CONFIGURATION ---
-    const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbyR-F2gjRmZxZO8Y3ofJ7NPKWXXZmOkqgbomoUHdj76k6FIibakdMMp1jvLdT36xPH3zA/exec"; 
-    // ^ REPLACE THIS WITH YOUR DEPLOYED WEB APP URL
-
-    // --- STATE ---
-    let appData = null;
+    const API_URL = "https://script.google.com/macros/s/AKfycbwbcb5ureVKb1daLBFxFa6qb0WjhpOm4lAZj198W_-bIdnVsfTR6f9ybNezJ0CF51CpbQ/exec";
+    
+    // Global State
+    let squadPlayers = [];
     let isDoubles = false;
-    let allPlayersList = [];
-    let faqOpenState = { home: {}, info: {} };
 
-    // --- INITIALIZATION ---
-    window.addEventListener('DOMContentLoaded', () => {
+    // --- 1. CORE LOGIC & STATE MANAGEMENT ---
+    window.onload = async () => {
+      await loadAppConfig(); 
       evaluateAppState();
-      fetchAppData();
-    });
+      loadPublicData();
 
-    // Helper: Set Button Loading State (Double-Submission Protection)
-    function setButtonLoading(btnId, isLoading, defaultText = "") {
-      const btn = document.getElementById(btnId);
-      if (!btn) return;
-      if (isLoading) {
-        btn.disabled = true;
-        btn.classList.add('opacity-75', 'cursor-not-allowed');
-        // Inject a tiny spinner with inline SVG
-        btn.innerHTML = `<svg class="animate-spin h-4 w-4 text-white mr-2 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processing...`;
+      // Smoothly hide loader and reveal the main page structure
+      document.getElementById('global-loader').classList.add('hidden');
+      document.getElementById('main-content').classList.remove('hidden');
+    };
+
+    async function loadAppConfig() {
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getConfig' }) });
+        const result = await res.json();
+        if (result.status === "success" && result.data) {
+          const cfg = result.data;
+
+          // Apply all toggles & ordering
+          toggleWidget('widget-announcement', cfg.announcement);
+          toggleWidget('widget-login', cfg.login);
+          toggleWidget('widget-lta', cfg.lta);
+          toggleWidget('widget-faqHome', cfg.faqHome);
+          
+          toggleWidget('widget-recordMatch', cfg.recordMatch);
+          toggleWidget('widget-leaderboard', cfg.leaderboard);
+          
+          toggleWidget('widget-timetable', cfg.timetable);
+          
+          toggleWidget('widget-faqInfo', cfg.faqInfo);
+        }
+      } catch (err) {
+        console.warn("Could not load config dashboard. Missing features.");
+      }
+    }
+
+    function toggleWidget(id, settings) {
+      const el = document.getElementById(id);
+      if (!el || !settings) return;
+
+      if (settings.visible === false) {
+        el.classList.add('hidden');
       } else {
-        btn.disabled = false;
-        btn.classList.remove('opacity-75', 'cursor-not-allowed');
-        btn.innerHTML = defaultText;
+        el.classList.remove('hidden');
+        if (settings.order !== undefined) el.style.order = settings.order;
       }
     }
 
     function evaluateAppState() {
       const prefix = localStorage.getItem('tc_prefix');
-      const name = localStorage.getItem('tc_name');
       const squad = localStorage.getItem('tc_squad');
+      const name = localStorage.getItem('tc_name');
 
       if (prefix && squad && name) {
         document.getElementById('loginForm').classList.add('hidden');
@@ -284,429 +289,314 @@
         document.getElementById('ltaLocked').classList.add('hidden');
         document.getElementById('ltaUnlocked').classList.remove('hidden');
         
-        // Check for persistent LTA number
-        const savedLTA = localStorage.getItem('tc_lta');
-        if (savedLTA) document.getElementById('ltaInput').value = savedLTA;
-
         document.getElementById('matchplayLocked').classList.add('hidden');
-        document.getElementById('matchplayUnlocked').classList.remove('flex');
-        document.getElementById('matchplayUnlocked').classList.add('flex');
-
+        document.getElementById('matchplayUnlocked').classList.remove('hidden');
+        
         document.getElementById('leaderboardLocked').classList.add('hidden');
-        document.getElementById('leaderboardUnlocked').classList.remove('hidden');
         document.getElementById('squadNameDisplay').classList.remove('hidden');
         document.getElementById('squadNameDisplay').innerText = squad;
-
-        document.getElementById('scheduleLocked').classList.add('hidden');
-        document.getElementById('scheduleUnlocked').classList.remove('hidden');
-        document.getElementById('scheduleUnlocked').classList.add('flex');
         
-        if (appData) populatePersonalSchedule();
-        fetchLeaderboard();
+        document.getElementById('timetableLocked').classList.add('hidden');
       } else {
         document.getElementById('loginForm').classList.remove('hidden');
         document.getElementById('welcomeMessage').classList.add('hidden');
+        
         document.getElementById('ltaLocked').classList.remove('hidden');
         document.getElementById('ltaUnlocked').classList.add('hidden');
         document.getElementById('matchplayLocked').classList.remove('hidden');
         document.getElementById('matchplayUnlocked').classList.add('hidden');
-        document.getElementById('matchplayUnlocked').classList.remove('flex');
         document.getElementById('leaderboardLocked').classList.remove('hidden');
-        document.getElementById('leaderboardUnlocked').classList.add('hidden');
         document.getElementById('squadNameDisplay').classList.add('hidden');
-        document.getElementById('scheduleLocked').classList.remove('hidden');
-        document.getElementById('scheduleUnlocked').classList.add('hidden');
-        document.getElementById('scheduleUnlocked').classList.remove('flex');
+        document.getElementById('timetableLocked').classList.remove('hidden');
+        document.getElementById('leaderboardUnlocked').classList.add('hidden');
+        document.getElementById('timetableUnlocked').classList.add('hidden');
       }
     }
 
-    async function fetchAppData() {
-      try {
-        const response = await fetch(`${GOOGLE_APP_URL}?action=getData`, {
-          method: 'GET',
-          redirect: 'follow' // Crucial for GAS 302 redirects
-        });
-
-        // Capture the raw text before parsing to catch GAS HTML error pages
-        const rawText = await response.text();
-
-        try {
-          appData = JSON.parse(rawText);
-        } catch (jsonErr) {
-          console.error("Failed to parse JSON. Server returned:", rawText);
-          throw new Error("Server did not return valid JSON. Check browser console.");
-        }
-
-        if (appData.status === "error") {
-          console.error("Backend returned an error:", appData.message);
-          throw new Error(appData.message);
-        }
-
-        document.getElementById('global-loader').classList.add('hidden');
-        document.getElementById('main-content').classList.remove('hidden');
-        
-        renderWidgets();
-      } catch (err) {
-        document.getElementById('global-loader').innerHTML = `
-          <div class="text-center">
-            <span class="text-red-500 text-sm font-semibold block mb-2">Error loading hub data.</span>
-            <span class="text-slate-500 text-xs">${err.message}</span>
-          </div>`;
-        console.error("Fetch error details:", err);
-      }
-    }
-
-    function renderWidgets() {
-      // Unhide core widgets
-      ['widget-announcement', 'widget-login', 'widget-lta', 'widget-faqHome', 
-       'widget-recordMatch', 'widget-leaderboard', 'widget-personalSchedule', 
-       'widget-links', 'widget-faqInfo'].forEach(id => {
-         const el = document.getElementById(id);
-         if (el) el.classList.remove('hidden');
+    function switchTab(tabName) {
+      ['home', 'matches', 'schedule', 'info'].forEach(tab => {
+        document.getElementById(`page-${tab}`).classList.add('hidden');
+        document.getElementById(`tab-${tab}`).classList.remove('active');
       });
+      
+      document.getElementById(`page-${tabName}`).classList.remove('hidden');
+      document.getElementById(`tab-${tabName}`).classList.add('active');
 
-      // Announcement
-      document.getElementById('announcementLoading').classList.add('hidden');
-      if (appData.announcement && appData.announcement.trim() !== "") {
-        const annContent = document.getElementById('announcementContent');
-        annContent.innerHTML = formatTextWithLinks(appData.announcement);
-        annContent.classList.remove('hidden');
-      } else {
-        document.getElementById('widget-announcement').classList.add('hidden');
+      const squad = localStorage.getItem('tc_squad');
+      if (squad) {
+        if (tabName === 'matches') {
+          if (squadPlayers.length === 0) fetchRoster(squad);
+          if (document.getElementById('leaderboardBody').innerHTML === '') fetchLeaderboard(squad);
+        } else if (tabName === 'schedule') {
+          if (document.getElementById('timetableBody').innerHTML === '') fetchTimetable(squad);
+        }
       }
-
-      // FAQs
-      document.getElementById('faqLoadingHome').classList.add('hidden');
-      document.getElementById('faqLoadingInfo').classList.add('hidden');
-      if (appData.faqs && appData.faqs.length > 0) {
-        const faqHome = document.getElementById('faqContainerHome');
-        const faqInfo = document.getElementById('faqContainerInfo');
-        
-        const homeHTML = generateFaqHTML(appData.faqs, 'home');
-        const infoHTML = generateFaqHTML(appData.faqs, 'info');
-
-        faqHome.innerHTML = homeHTML;
-        faqInfo.innerHTML = infoHTML;
-        
-        faqHome.classList.remove('hidden');
-        faqInfo.classList.remove('hidden');
-      } else {
-        document.getElementById('widget-faqHome').classList.add('hidden');
-        document.getElementById('widget-faqInfo').classList.add('hidden');
-      }
-
-      // Links
-      document.getElementById('linksLoading').classList.add('hidden');
-      if (appData.links && appData.links.length > 0) {
-        const c = document.getElementById('linksContainer');
-        c.innerHTML = appData.links.map(l => `
-          <a href="${l.url}" target="_blank" class="block p-3 rounded-xl border border-slate-200 hover:border-blue-400 bg-slate-50 hover:bg-blue-50 transition-colors flex items-center justify-between group">
-            <span class="text-sm font-semibold text-slate-700 group-hover:text-blue-700">${l.title}</span>
-            <span class="text-slate-400 group-hover:text-blue-500">→</span>
-          </a>
-        `).join('');
-        c.classList.remove('hidden');
-      } else {
-        document.getElementById('widget-links').classList.add('hidden');
-      }
-
-      // Populate Players for Matchplay
-      allPlayersList = appData.players || [];
-      populateDropdowns();
-
-      if (localStorage.getItem('tc_squad')) populatePersonalSchedule();
     }
 
-    // FAQ HTML Generator
+    // --- 2. PUBLIC DATA (Announcements & FAQs) ---
+    async function loadPublicData() {
+      // Load Announcement
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getAnnouncement' }) });
+        const result = await res.json();
+        const contentBox = document.getElementById('announcementContent');
+        const loadingBox = document.getElementById('announcementLoading');
+        
+        const announcementText = result.data || result.message;
+
+        if (result.status === "success" && announcementText && String(announcementText).trim() !== "") {
+          contentBox.innerHTML = autoLinkText(announcementText);
+          contentBox.classList.remove('hidden');
+          loadingBox.classList.add('hidden');
+        } else {
+          loadingBox.innerText = "No current announcements.";
+        }
+      } catch (err) {}
+
+      // Load FAQs
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getFAQs' }) });
+        const result = await res.json();
+        
+        const loaderHome = document.getElementById('faqLoadingHome');
+        const loaderInfo = document.getElementById('faqLoadingInfo');
+        const containerHome = document.getElementById('faqContainerHome');
+        const containerInfo = document.getElementById('faqContainerInfo');
+
+        if (result.status === "success" && result.data && result.data.length > 0) {
+          containerHome.innerHTML = generateFaqHTML(result.data, 'home');
+          containerInfo.innerHTML = generateFaqHTML(result.data, 'info');
+
+          containerHome.classList.remove('hidden');
+          containerInfo.classList.remove('hidden');
+          loaderHome.classList.add('hidden');
+          loaderInfo.classList.add('hidden');
+        } else {
+          loaderHome.innerText = "No FAQs available.";
+          loaderInfo.innerText = "No FAQs available.";
+        }
+      } catch (err) {}
+    }
+
+    // Converts plain URLs into clickable links
+    function autoLinkText(text) {
+      const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+      return text.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold underline hover:text-blue-800 transition-colors">$1</a>');
+    }
+
+    // Helper to generate FAQ HTML with scope-isolated IDs
     function generateFaqHTML(faqs, scope) {
-      return faqs.map((faq, index) => {
-        // Clean invisible spaces/newlines
-        const cleanAnswer = faq.answer ? faq.answer.trim() : "";
-        return `
+      return faqs.map((faq, index) => `
         <div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-2xs">
           <button onclick="toggleFAQ('${scope}', ${index})" class="w-full text-left px-5 py-4 hover:bg-slate-50 flex justify-between items-center transition-colors cursor-pointer">
             <span class="font-semibold text-sm text-slate-800">${faq.question}</span>
             <svg id="faq-icon-${scope}-${index}" class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </button>
           <div id="faq-answer-${scope}-${index}" class="hidden px-5 pb-4 pt-1 text-sm text-slate-600 border-t border-slate-100 whitespace-pre-line leading-relaxed bg-slate-50/50">
-            ${cleanAnswer}
-          </div>
-        </div>
-      `}).join('');
-    }
-
-    function toggleFAQ(scope, index) {
-      const answerEl = document.getElementById(`faq-answer-${scope}-${index}`);
-      const iconEl = document.getElementById(`faq-icon-${scope}-${index}`);
-      const isOpen = !answerEl.classList.contains('hidden');
-
-      if (isOpen) {
-        answerEl.classList.add('hidden');
-        iconEl.classList.remove('rotate-180');
-        faqOpenState[scope][index] = false;
-      } else {
-        answerEl.classList.remove('hidden');
-        iconEl.classList.add('rotate-180');
-        faqOpenState[scope][index] = true;
-      }
-    }
-
-    function populateDropdowns() {
-      const sorted = [...allPlayersList].sort((a,b) => a.name.localeCompare(b.name));
-      let options = `<option value="">Select Player...</option>`;
-      sorted.forEach(p => {
-        options += `<option value="${p.name}">${p.name} (${p.squad})</option>`;
-      });
-      ['winner1','winner2','loser1','loser2'].forEach(id => {
-        const select = document.getElementById(id);
-        if(select) {
-          const defaultOpt = select.options[0].text;
-          select.innerHTML = `<option value="">${defaultOpt}</option>` + options;
-        }
-      });
-    }
-
-    function populatePersonalSchedule() {
-      const squad = localStorage.getItem('tc_squad');
-      if (!squad || !appData || !appData.schedule) return;
-
-      const c = document.getElementById('scheduleUnlocked');
-      const filtered = appData.schedule.filter(s => s.squad.toLowerCase() === squad.toLowerCase());
-      
-      if (filtered.length === 0) {
-        c.innerHTML = `<p class="text-sm text-slate-500 italic py-2 text-center">No scheduled sessions found for ${squad}.</p>`;
-        return;
-      }
-
-      c.innerHTML = filtered.map(s => `
-        <div class="flex items-center gap-4 p-3 rounded-xl border border-slate-200 bg-white">
-          <div class="flex flex-col items-center justify-center bg-slate-100 rounded-lg p-2 min-w-[60px]">
-            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">${s.day}</span>
-            <span class="text-sm font-black text-slate-800">${s.time}</span>
-          </div>
-          <div class="flex flex-col">
-            <span class="text-sm font-bold text-slate-800">${s.type}</span>
-            <span class="text-xs text-slate-500">${s.location}</span>
+            ${faq.answer}
           </div>
         </div>
       `).join('');
     }
 
-    // --- ACTIONS ---
-    async function performLogin() {
-      const prefix = document.getElementById('prefixInput').value.trim();
-      const statusBox = document.getElementById('loginStatus');
-      if (!prefix) { statusBox.innerText = "Please enter a prefix."; return; }
+    function toggleFAQ(scope, index) {
+      const answerDiv = document.getElementById(`faq-answer-${scope}-${index}`);
+      const icon = document.getElementById(`faq-icon-${scope}-${index}`);
+      
+      if (answerDiv.classList.contains('hidden')) {
+        answerDiv.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+      } else {
+        answerDiv.classList.add('hidden');
+        icon.style.transform = 'rotate(0deg)';
+      }
+    }
 
-      setButtonLoading('loginBtn', true, 'Log In');
-      statusBox.innerText = "";
+    // --- 3. LOGIN WIDGET FUNCTIONS ---
+    async function performLogin() {
+      const prefix = document.getElementById('prefixInput').value.trim().toLowerCase();
+      const statusBox = document.getElementById('loginStatus');
+      if (!prefix) return statusBox.innerText = "Please enter your prefix.";
+      
+      statusBox.classList.replace('text-red-600', 'text-slate-500');
+      statusBox.innerText = "Authenticating...";
 
       try {
-        const response = await fetch(`${GOOGLE_APP_URL}?action=login`, {
-          method: 'POST',
-          body: JSON.stringify({ prefix })
-        });
+        const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'login', prefix }) });
         const result = await response.json();
-        
+
         if (result.status === "success") {
           localStorage.setItem('tc_prefix', prefix);
           localStorage.setItem('tc_name', result.playerName);
           localStorage.setItem('tc_squad', result.squadName);
-          if (result.lta) localStorage.setItem('tc_lta', result.lta); // Capture LTA from GS
+          statusBox.innerText = "";
           evaluateAppState();
         } else {
-          statusBox.innerText = result.message || "Invalid prefix.";
+          statusBox.classList.replace('text-slate-500', 'text-red-600');
+          statusBox.innerText = result.message || "Invalid credentials.";
         }
       } catch (err) {
-        statusBox.innerText = "Connection error.";
-      } finally {
-        setButtonLoading('loginBtn', false, 'Log In');
+        statusBox.classList.replace('text-slate-500', 'text-red-600');
+        statusBox.innerText = "Network Error.";
       }
     }
 
     function logout() {
-      localStorage.removeItem('tc_prefix');
-      localStorage.removeItem('tc_name');
-      localStorage.removeItem('tc_squad');
-      localStorage.removeItem('tc_lta');
-      document.getElementById('prefixInput').value = "";
-      document.getElementById('ltaInput').value = "";
+      localStorage.clear();
+      squadPlayers = [];
+      document.getElementById('leaderboardBody').innerHTML = '';
+      document.getElementById('timetableBody').innerHTML = '';
       evaluateAppState();
     }
 
+    // --- 4. LTA WIDGET FUNCTIONS ---
     async function submitLTA() {
-      const ltaNum = document.getElementById('ltaInput').value.trim();
-      const prefix = localStorage.getItem('tc_prefix');
+      const ltaInput = document.getElementById('ltaInput');
+      const ltaNum = ltaInput.value.trim();
       const statusBox = document.getElementById('ltaStatus');
+      const prefix = localStorage.getItem('tc_prefix');
 
-      if (!ltaNum || !prefix) {
+      // Strict Regex: Exact 9 numeric digits
+      const ltaRegex = /^\d{9}$/;
+
+      if (!ltaNum) {
         statusBox.className = "text-xs font-medium mt-1.5 text-red-600";
-        statusBox.innerText = "Please enter a valid number.";
-        return;
+        return statusBox.innerText = "Please enter your LTA number.";
       }
 
-      setButtonLoading('ltaBtn', true, 'Save Number');
-      statusBox.innerText = "";
+      if (!ltaRegex.test(ltaNum)) {
+        statusBox.className = "text-xs font-medium mt-1.5 text-red-600";
+        return statusBox.innerText = "Invalid format: LTA number must be exactly 9 digits.";
+      }
+
+      statusBox.className = "text-xs font-medium mt-1.5 text-slate-500";
+      statusBox.innerText = "Saving...";
 
       try {
-        const response = await fetch(`${GOOGLE_APP_URL}?action=updateLTA`, {
+        const response = await fetch(API_URL, {
           method: 'POST',
-          body: JSON.stringify({ prefix, ltaNumber: ltaNum })
+          body: JSON.stringify({ action: 'submitLTA', prefix, lta: ltaNum })
         });
         const result = await response.json();
-        
+
         const isSuccess = result.status === "success";
         statusBox.className = `text-xs font-medium mt-1.5 ${isSuccess ? "text-emerald-600" : "text-red-600"}`;
         statusBox.innerText = result.message || (isSuccess ? "LTA Number saved successfully!" : "Failed to save LTA number.");
 
-        if (isSuccess) {
-          localStorage.setItem('tc_lta', ltaNum);
-        }
+        if (isSuccess) ltaInput.value = "";
       } catch (err) {
         statusBox.className = "text-xs font-medium mt-1.5 text-red-600";
-        statusBox.innerText = "Connection error.";
-      } finally {
-        setButtonLoading('ltaBtn', false, 'Save Number');
+        statusBox.innerText = "Connection failed.";
       }
     }
 
+    // --- 5. MATCHPLAY WIDGET FUNCTIONS ---
     function setMatchType(doubles) {
       isDoubles = doubles;
-      document.getElementById('winner2').classList.toggle('hidden', !doubles);
-      document.getElementById('loser2').classList.toggle('hidden', !doubles);
+      document.getElementById('singlesBtn').className = doubles ? "px-3 py-1 text-xs font-semibold rounded-md text-slate-500 hover:text-slate-800 transition-all" : "px-3 py-1 text-xs font-semibold rounded-md bg-white text-slate-800 shadow-xs transition-all";
+      document.getElementById('doublesBtn').className = doubles ? "px-3 py-1 text-xs font-semibold rounded-md bg-white text-slate-800 shadow-xs transition-all" : "px-3 py-1 text-xs font-semibold rounded-md text-slate-500 hover:text-slate-800 transition-all";
       
-      const sBtn = document.getElementById('singlesBtn');
-      const dBtn = document.getElementById('doublesBtn');
-      
-      if(doubles) {
-        dBtn.classList.replace('text-slate-500', 'bg-white');
-        dBtn.classList.replace('hover:text-slate-800', 'text-slate-800');
-        dBtn.classList.add('shadow-xs');
-        sBtn.classList.replace('bg-white', 'text-slate-500');
-        sBtn.classList.replace('text-slate-800', 'hover:text-slate-800');
-        sBtn.classList.remove('shadow-xs');
-      } else {
-        sBtn.classList.replace('text-slate-500', 'bg-white');
-        sBtn.classList.replace('hover:text-slate-800', 'text-slate-800');
-        sBtn.classList.add('shadow-xs');
-        dBtn.classList.replace('bg-white', 'text-slate-500');
-        dBtn.classList.replace('text-slate-800', 'hover:text-slate-800');
-        dBtn.classList.remove('shadow-xs');
-      }
+      const action = doubles ? 'remove' : 'add';
+      document.getElementById('winner2').classList[action]('hidden');
+      document.getElementById('loser2').classList[action]('hidden');
+    }
+
+    async function fetchRoster(squadName) {
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getSquadRoster', squad: squadName }) });
+        const result = await res.json();
+        if (result.status === "success") {
+          squadPlayers = result.data;
+          ['winner1', 'winner2', 'loser1', 'loser2'].forEach(id => {
+            const select = document.getElementById(id);
+            select.innerHTML = `<option value="">${select.options[0].text}</option>` + squadPlayers.map(p => `<option value="${p}">${p}</option>`).join('');
+          });
+        }
+      } catch (err) {}
     }
 
     async function submitMatch() {
-      const prefix = localStorage.getItem('tc_prefix');
-      if (!prefix) return;
-
-      const w1 = document.getElementById('winner1').value;
-      const w2 = isDoubles ? document.getElementById('winner2').value : "";
-      const l1 = document.getElementById('loser1').value;
-      const l2 = isDoubles ? document.getElementById('loser2').value : "";
-      const score = document.getElementById('scoreSelect').value;
       const statusBox = document.getElementById('matchStatusMsg');
+      const score = document.getElementById('scoreSelect').value;
+      const w1 = document.getElementById('winner1').value, w2 = document.getElementById('winner2').value;
+      const l1 = document.getElementById('loser1').value, l2 = document.getElementById('loser2').value;
 
-      if (!w1 || !l1 || !score || (isDoubles && (!w2 || !l2))) {
-        statusBox.className = "text-xs font-medium text-center min-h-[16px] text-red-600";
-        statusBox.innerText = "Please fill all required fields.";
-        return;
+      if (!isDoubles && (!w1 || !l1 || !score || w1 === l1)) {
+        statusBox.className = "text-xs font-medium text-center text-red-600";
+        return statusBox.innerText = "Select unique players and a score.";
+      }
+      if (isDoubles && (!w1 || !w2 || !l1 || !l2 || !score || new Set([w1, w2, l1, l2]).size !== 4)) {
+        statusBox.className = "text-xs font-medium text-center text-red-600";
+        return statusBox.innerText = "Select 4 unique players and a score.";
       }
 
-      setButtonLoading('matchBtn', true, 'Submit Result');
-      statusBox.innerText = "";
-
-      const payload = {
-        submitterPrefix: prefix,
-        winner1: w1, winner2: w2, loser1: l1, loser2: l2, score: score, isDoubles: isDoubles
-      };
+      statusBox.className = "text-xs font-medium text-center text-slate-500";
+      statusBox.innerText = "Saving match...";
 
       try {
-        const response = await fetch(`${GOOGLE_APP_URL}?action=recordMatch`, {
+        const res = await fetch(API_URL, {
           method: 'POST',
-          body: JSON.stringify(payload)
+          body: JSON.stringify({ action: 'submitMatchResult', squad: localStorage.getItem('tc_squad'), winners: isDoubles ? [w1, w2] : [w1], losers: isDoubles ? [l1, l2] : [l1], score })
         });
-        const result = await response.json();
-
-        if (result.status === "success") {
-          statusBox.className = "text-xs font-medium text-center min-h-[16px] text-emerald-600";
-          statusBox.innerText = "Match recorded successfully!";
-          // Reset forms
-          ['winner1','winner2','loser1','loser2','scoreSelect'].forEach(id => document.getElementById(id).value = "");
-          // Refresh leaderboard
-          fetchLeaderboard();
-        } else {
-          statusBox.className = "text-xs font-medium text-center min-h-[16px] text-red-600";
-          statusBox.innerText = result.message || "Failed to record match.";
-        }
-      } catch(err) {
-        statusBox.className = "text-xs font-medium text-center min-h-[16px] text-red-600";
-        statusBox.innerText = "Connection error.";
-      } finally {
-        setButtonLoading('matchBtn', false, 'Submit Result');
-      }
-    }
-
-    async function fetchLeaderboard() {
-      const squad = localStorage.getItem('tc_squad');
-      if (!squad) return;
-
-      const tbody = document.getElementById('leaderboardBody');
-      const loader = document.getElementById('leaderboardLoading');
-      const container = document.getElementById('leaderboardUnlocked');
-      
-      container.classList.add('hidden');
-      loader.classList.remove('hidden');
-
-      try {
-        const response = await fetch(`${GOOGLE_APP_URL}?action=getLeaderboard&squad=${encodeURIComponent(squad)}`);
-        const data = await response.json();
+        const result = await res.json();
         
-        if (data.status === "success" && data.leaderboard.length > 0) {
-          tbody.innerHTML = data.leaderboard.map((p, i) => {
-            const isMe = p.name === localStorage.getItem('tc_name');
-            const rowClass = isMe ? "bg-blue-50/60 font-semibold" : (i % 2 === 0 ? "bg-white" : "bg-slate-50");
-            const highlightClass = isMe ? "text-blue-700" : "text-slate-800";
-            return `
-              <tr class="${rowClass} border-b border-slate-100 last:border-0">
-                <td class="py-2.5 pl-3 pr-1 text-slate-400 font-medium">${i+1}</td>
-                <td class="py-2.5 px-2 ${highlightClass}">${p.name}</td>
-                <td class="py-2.5 px-1 text-center text-emerald-600 font-medium">${p.wins}</td>
-                <td class="py-2.5 px-1 text-center text-rose-600 font-medium">${p.losses}</td>
-                <td class="py-2.5 pr-3 pl-1 text-right text-slate-500">${p.winPct}%</td>
-              </tr>
-            `;
-          }).join('');
-        } else {
-          tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-xs text-slate-500 italic">No match data yet.</td></tr>`;
+        const isSuccess = result.status === "success";
+        statusBox.className = `text-xs font-medium text-center ${isSuccess ? "text-emerald-600" : "text-red-600"}`;
+        statusBox.innerText = result.message || (isSuccess ? "Match result saved!" : "Failed to submit match.");
+        
+        if (isSuccess) {
+          ['winner1', 'winner2', 'loser1', 'loser2', 'scoreSelect'].forEach(id => document.getElementById(id).value = "");
+          fetchLeaderboard(localStorage.getItem('tc_squad'));
         }
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-xs text-red-500">Failed to load leaderboard.</td></tr>`;
-      } finally {
-        loader.classList.add('hidden');
-        container.classList.remove('hidden');
+        statusBox.className = "text-xs font-medium text-center text-red-600";
+        statusBox.innerText = "Network error submitting match.";
       }
     }
 
-    // --- TAB NAVIGATION ---
-    const pages = ['home', 'matches', 'schedule', 'info'];
-    function switchTab(tabId) {
-      pages.forEach(p => {
-        document.getElementById(`page-${p}`).classList.add('hidden');
-        const btn = document.getElementById(`tab-${p}`);
-        btn.classList.remove('active', 'bg-slate-900', 'text-white', 'shadow-sm');
-        btn.classList.add('text-slate-600', 'hover:text-slate-900');
-      });
-      document.getElementById(`page-${tabId}`).classList.remove('hidden');
-      const activeBtn = document.getElementById(`tab-${tabId}`);
-      activeBtn.classList.remove('text-slate-600', 'hover:text-slate-900');
-      activeBtn.classList.add('active');
+    // --- 6. LEADERBOARD WIDGET FUNCTIONS ---
+    async function fetchLeaderboard(squadName) {
+      document.getElementById('leaderboardLoading').classList.remove('hidden');
+      document.getElementById('leaderboardUnlocked').classList.add('hidden');
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getLeaderboard', squad: squadName }) });
+        const result = await res.json();
+        if (result.status === "success") {
+          document.getElementById('leaderboardBody').innerHTML = result.data.map((p, i) => `
+            <tr class="border-b border-slate-100 last:border-none ${i === 0 ? 'bg-blue-50/50' : (i % 2 !== 0 ? 'bg-slate-50/50' : 'bg-white')}">
+              <td class="py-2.5 pl-3 pr-1 text-slate-400 font-semibold">${i + 1}</td>
+              <td class="py-2.5 px-2 text-slate-800 font-medium">${p.name}</td>
+              <td class="py-2.5 px-1 text-slate-700 text-center">${p.won}</td>
+              <td class="py-2.5 px-1 text-slate-500 text-center">${p.lost}</td>
+              <td class="py-2.5 pr-3 pl-1 text-right font-medium ${p.winRate >= 50 ? 'text-emerald-600' : 'text-slate-500'}">${p.winRate}%</td>
+            </tr>
+          `).join('');
+          document.getElementById('leaderboardLoading').classList.add('hidden');
+          document.getElementById('leaderboardUnlocked').classList.remove('hidden');
+        }
+      } catch (err) {}
     }
 
-    function formatTextWithLinks(text) {
-      const urlRegex = /(https?:\/\/[^\s]+)/g;
-      return text.replace(urlRegex, function(url) {
-        return `<a href="${url}" target="_blank" class="text-blue-600 hover:underline break-all">${url}</a>`;
-      });
+    // --- 7. TIMETABLE WIDGET FUNCTIONS ---
+    async function fetchTimetable(squadName) {
+      document.getElementById('timetableLoading').classList.remove('hidden');
+      document.getElementById('timetableUnlocked').classList.add('hidden');
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getTimetable', squad: squadName }) });
+        const result = await res.json();
+        if (result.status === "success" && result.data.length > 0) {
+          document.getElementById('timetableBody').innerHTML = result.data.map(row => `
+            <tr class="hover:bg-slate-50/50 transition-colors">
+              <td class="p-2.5 font-medium text-slate-900">${row.session}</td>
+              <td class="p-2.5 text-slate-600">${row.dayTime}</td>
+            </tr>
+          `).join('');
+        } else {
+          document.getElementById('timetableBody').innerHTML = `<tr><td colspan="2" class="p-4 text-center text-slate-400 italic">No scheduled entries found.</td></tr>`;
+        }
+        document.getElementById('timetableLoading').classList.add('hidden');
+        document.getElementById('timetableUnlocked').classList.remove('hidden');
+      } catch (err) {}
     }
   </script>
 </body>
