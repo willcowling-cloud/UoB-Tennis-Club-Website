@@ -322,15 +322,37 @@
 
     async function fetchAppData() {
       try {
-        const response = await fetch(`${GOOGLE_APP_URL}?action=getData`);
-        appData = await response.json();
+        const response = await fetch(`${GOOGLE_APP_URL}?action=getData`, {
+          method: 'GET',
+          redirect: 'follow' // Crucial for GAS 302 redirects
+        });
+
+        // Capture the raw text before parsing to catch GAS HTML error pages
+        const rawText = await response.text();
+
+        try {
+          appData = JSON.parse(rawText);
+        } catch (jsonErr) {
+          console.error("Failed to parse JSON. Server returned:", rawText);
+          throw new Error("Server did not return valid JSON. Check browser console.");
+        }
+
+        if (appData.status === "error") {
+          console.error("Backend returned an error:", appData.message);
+          throw new Error(appData.message);
+        }
+
         document.getElementById('global-loader').classList.add('hidden');
         document.getElementById('main-content').classList.remove('hidden');
         
         renderWidgets();
       } catch (err) {
-        document.getElementById('global-loader').innerHTML = `<span class="text-red-500 text-sm font-semibold">Error loading hub data. Please refresh.</span>`;
-        console.error("Fetch error:", err);
+        document.getElementById('global-loader').innerHTML = `
+          <div class="text-center">
+            <span class="text-red-500 text-sm font-semibold block mb-2">Error loading hub data.</span>
+            <span class="text-slate-500 text-xs">${err.message}</span>
+          </div>`;
+        console.error("Fetch error details:", err);
       }
     }
 
