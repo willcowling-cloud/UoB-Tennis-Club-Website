@@ -10,24 +10,31 @@
 
   <!-- Header / Navigation Bar -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-    <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="max-w-5xl mx-auto px-4 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-4">
+      
+      <!-- Brand Logo & Title -->
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-xs">
-          🎾
+        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" stroke-width="2"/>
+            <path stroke-width="1.8" d="M5.6 5.6C8 8 8 11.5 8 12s0 4-2.4 6.4"/>
+            <path stroke-width="1.8" d="M18.4 5.6C16 8 16 11.5 16 12s0 4 2.4 6.4"/>
+          </svg>
         </div>
         <div>
           <h1 class="text-lg font-bold text-slate-900 leading-tight">Tennis Club Hub</h1>
-          <p id="squadNameDisplay" class="text-xs text-slate-500 hidden font-medium"></p>
+          <p id="squadNameDisplay" class="text-xs text-blue-600 font-semibold hidden"></p>
         </div>
       </div>
 
       <!-- Navigation Tabs -->
-      <nav class="flex bg-slate-100 p-1 rounded-xl gap-1 border border-slate-200/60 text-xs font-semibold">
-        <button id="tab-home" onclick="switchTab('home')" class="px-3.5 py-2 rounded-lg bg-white text-blue-600 shadow-2xs transition-all">Home</button>
+      <nav class="flex bg-slate-100 p-1 rounded-xl gap-1 border border-slate-200 text-xs font-semibold">
+        <button id="tab-home" onclick="switchTab('home')" class="px-3.5 py-2 rounded-lg bg-white text-blue-600 shadow-sm transition-all">Home</button>
         <button id="tab-matchplay" onclick="switchTab('matchplay')" class="px-3.5 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all">Matchplay</button>
         <button id="tab-info" onclick="switchTab('info')" class="px-3.5 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all">Information</button>
         <button id="tab-timetable" onclick="switchTab('timetable')" class="px-3.5 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all">Timetable</button>
       </nav>
+
     </div>
   </header>
 
@@ -37,11 +44,15 @@
     <!-- HOME TAB -->
     <section id="section-home" class="grid grid-cols-1 md:grid-cols-2 gap-6">
       
-      <!-- Announcement Widget (Flush left text alignment, pl-8 removed) -->
-      <div id="widget-announcement" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden">
+      <!-- Announcement Widget (Flush left text, no indent) -->
+      <div id="widget-announcement" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm relative overflow-hidden">
         <div class="absolute top-0 left-0 w-1.5 h-full bg-blue-600"></div>
         <div class="flex items-center gap-2 mb-3">
-          <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-50 text-blue-600 text-xs">📢</span>
+          <span class="p-1.5 rounded-lg bg-blue-50 text-blue-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.684A1.761 1.761 0 013 12c0-.626.328-1.18.825-1.483l5.882-3.361"/>
+            </svg>
+          </span>
           <h3 class="text-base font-bold text-slate-800 m-0">Announcement</h3>
         </div>
         <div id="announcementLoading" class="text-xs text-slate-400 italic">Checking for notices...</div>
@@ -49,7 +60,7 @@
       </div>
 
       <!-- Login Widget -->
-      <div id="widget-login" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+      <div id="widget-login" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col justify-between">
         <div>
           <h2 class="text-base font-bold text-slate-900 mb-1">Player Login</h2>
           <p class="text-xs text-slate-500 mb-4">Enter your prefix code to access your squad features.</p>
@@ -59,7 +70,7 @@
               <label class="block text-xs font-semibold text-slate-700 mb-1">Student Prefix</label>
               <input type="text" id="prefixInput" placeholder="e.g. AB12" class="w-full text-sm px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
             </div>
-            <button onclick="performLogin()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl transition-all shadow-2xs">Log In</button>
+            <button onclick="performLogin()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl transition-all shadow-sm">Log In</button>
             <div id="loginStatus" class="text-xs font-medium text-slate-500 min-h-[1rem]"></div>
           </div>
 
@@ -77,7 +88,7 @@
       </div>
 
       <!-- LTA Registration Widget -->
-      <div id="widget-lta" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+      <div id="widget-lta" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col justify-between">
         <div>
           <h2 class="text-base font-bold text-slate-900 mb-1">LTA Number</h2>
           <p class="text-xs text-slate-500 mb-4">Link your 9-digit LTA number to your squad profile.</p>
@@ -91,14 +102,14 @@
               <label class="block text-xs font-semibold text-slate-700 mb-1">LTA Number (9 digits)</label>
               <input type="text" id="ltaInput" maxlength="9" placeholder="123456789" class="w-full text-sm px-3.5 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
             </div>
-            <button onclick="submitLTA()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs rounded-xl transition-all shadow-2xs">Save LTA Number</button>
+            <button onclick="submitLTA()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs rounded-xl transition-all shadow-sm">Save LTA Number</button>
             <div id="ltaStatus" class="text-xs font-medium min-h-[1rem]"></div>
           </div>
         </div>
       </div>
 
       <!-- FAQ Home Widget -->
-      <div id="widget-faqHome" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-faqHome" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
         <h2 class="text-base font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
         <div id="faqHomeContainer" class="space-y-3"></div>
       </div>
@@ -108,7 +119,7 @@
     <section id="section-matchplay" class="hidden space-y-6">
       
       <!-- Record Match Widget -->
-      <div id="widget-recordMatch" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-recordMatch" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
         <h2 class="text-base font-bold text-slate-900 mb-1">Record Match Result</h2>
         <p class="text-xs text-slate-500 mb-4">Submit your recent match scores within your squad.</p>
 
@@ -133,14 +144,14 @@
           </div>
 
           <div class="sm:col-span-2">
-            <button onclick="submitMatch()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl transition-all shadow-2xs">Submit Result</button>
+            <button onclick="submitMatch()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl transition-all shadow-sm">Submit Result</button>
             <div id="matchStatus" class="text-xs font-medium mt-2 min-h-[1rem]"></div>
           </div>
         </div>
       </div>
 
       <!-- Leaderboard Widget -->
-      <div id="widget-leaderboard" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-leaderboard" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
         <h2 class="text-base font-bold text-slate-900 mb-1">Squad Leaderboard</h2>
         <p class="text-xs text-slate-500 mb-4">Current standings for your squad.</p>
 
@@ -167,7 +178,7 @@
 
     <!-- INFORMATION TAB -->
     <section id="section-info" class="hidden space-y-6">
-      <div id="widget-faqInfo" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-faqInfo" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
         <h2 class="text-base font-bold text-slate-900 mb-1">Club Information & FAQs</h2>
         <p class="text-xs text-slate-500 mb-4">Everything you need to know about squad rules and schedules.</p>
         <div id="faqInfoContainer" class="space-y-3"></div>
@@ -176,7 +187,7 @@
 
     <!-- TIMETABLE TAB -->
     <section id="section-timetable" class="hidden space-y-6">
-      <div id="widget-timetable" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+      <div id="widget-timetable" class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
         <h2 class="text-base font-bold text-slate-900 mb-1">Squad Timetable</h2>
         <p class="text-xs text-slate-500 mb-4">Upcoming sessions and court assignments.</p>
 
@@ -184,14 +195,14 @@
           <p class="text-xs text-slate-500">Please log in to view your timetable.</p>
         </div>
 
-        <div id="timetableUnlocked" class="hidden space-y-3" id="timetableContent"></div>
+        <div id="timetableUnlocked" class="hidden space-y-3"></div>
       </div>
     </section>
 
   </main>
 
   <script>
-    // Replace with your Google Apps Script Web App URL
+    // Paste your Google Apps Script Deployment Web App URL here
     const API_URL = "https://script.google.com/macros/s/AKfycbwbcb5ureVKb1daLBFxFa6qb0WjhpOm4lAZj198W_-bIdnVsfTR6f9ybNezJ0CF51CpbQ/exec";
 
     let globalConfig = null;
@@ -203,18 +214,18 @@
       fetchFAQs();
     });
 
-    // Tab Navigation
+    // Tab Switcher
     function switchTab(tabName) {
       ['home', 'matchplay', 'info', 'timetable'].forEach(t => {
         document.getElementById(`section-${t}`).classList.add('hidden');
         const tabBtn = document.getElementById(`tab-${t}`);
-        tabBtn.classList.remove('bg-white', 'text-blue-600', 'shadow-2xs');
+        tabBtn.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
         tabBtn.classList.add('text-slate-600');
       });
 
       document.getElementById(`section-${tabName}`).classList.remove('hidden');
       const activeBtn = document.getElementById(`tab-${tabName}`);
-      activeBtn.classList.add('bg-white', 'text-blue-600', 'shadow-2xs');
+      activeBtn.classList.add('bg-white', 'text-blue-600', 'shadow-sm');
       activeBtn.classList.remove('text-slate-600');
 
       if (tabName === 'matchplay' && localStorage.getItem('tc_squad')) {
@@ -226,7 +237,7 @@
       }
     }
 
-    // App State Evaluator
+    // App State Manager
     function evaluateAppState() {
       const prefix = localStorage.getItem('tc_prefix');
       const squad = localStorage.getItem('tc_squad');
@@ -274,7 +285,7 @@
       }
     }
 
-    // Perform Login
+    // Login Action
     async function performLogin() {
       const prefix = document.getElementById('prefixInput').value.trim().toLowerCase();
       const statusBox = document.getElementById('loginStatus');
@@ -311,7 +322,7 @@
       }
     }
 
-    // Perform Logout
+    // Logout Action
     function performLogout() {
       localStorage.removeItem('tc_prefix');
       localStorage.removeItem('tc_squad');
@@ -322,7 +333,7 @@
       evaluateAppState();
     }
 
-    // Submit LTA Number
+    // Submit LTA Action
     async function submitLTA() {
       const ltaInput = document.getElementById('ltaInput');
       const ltaNum = ltaInput.value.trim();
@@ -364,7 +375,7 @@
       }
     }
 
-    // Fetch Announcement
+    // Announcement Fetcher
     async function fetchAnnouncement() {
       const loading = document.getElementById('announcementLoading');
       const content = document.getElementById('announcementContent');
@@ -388,7 +399,7 @@
       }
     }
 
-    // Fetch FAQs & Fix Extra Whitespace
+    // FAQ Fetcher (includes .trim() fix)
     async function fetchFAQs() {
       try {
         const response = await fetch(API_URL, {
@@ -409,7 +420,6 @@
       }
     }
 
-    // Helper to generate FAQ HTML with scope-isolated IDs & trimmed answers
     function generateFaqHTML(faqs, scope) {
       return faqs.map((faq, index) => {
         const safeAnswer = (faq.answer || "").trim();
@@ -433,7 +443,7 @@
       icon.classList.toggle('rotate-180');
     }
 
-    // Fetch Control Panel Visibility Config
+    // Config Panel Visibility Sync
     async function loadControlPanelConfig() {
       try {
         const response = await fetch(API_URL, {
@@ -464,7 +474,7 @@
       if (cfg.faqInfo && !cfg.faqInfo.visible) document.getElementById('widget-faqInfo').classList.add('hidden');
     }
 
-    // Matchplay & Squad Functions
+    // Matchplay & Leaderboard Loaders
     async function loadSquadRoster() {
       const squad = localStorage.getItem('tc_squad');
       const select = document.getElementById('opponentSelect');
