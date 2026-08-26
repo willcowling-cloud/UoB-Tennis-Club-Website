@@ -209,13 +209,27 @@
 
     <div id="page-info" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       
+      <!-- Squad Info Widget -->
+      <div id="widget-squadInfo" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+        <h3 class="text-base font-bold text-slate-800 m-0 mb-3">Squad Info & Links</h3>
+        <div id="squadInfoLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+          Please log in via the portal widget to view your squad info.
+        </div>
+        <div id="squadInfoLoading" class="hidden text-xs text-slate-500 italic text-center py-4">
+          Fetching squad info...
+        </div>
+        <div id="squadInfoContent" class="hidden text-sm text-slate-700 whitespace-pre-line leading-relaxed"></div>
+      </div>
+    
+      <!-- FAQ Info Widget -->
       <div id="widget-faqInfo" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <h3 class="text-base font-bold text-slate-800 m-0 mb-4">Frequently Asked Questions</h3>
         <div id="faqLoadingInfo" class="text-xs text-slate-500 italic">Loading FAQs...</div>
         <div id="faqContainerInfo" class="hidden flex flex-col gap-1.5"></div>
       </div>
-
+    
     </div>
+
 
   </main>
 
@@ -256,6 +270,7 @@
           toggleWidget('widget-timetable', cfg.timetable);
           
           toggleWidget('widget-faqInfo', cfg.faqInfo);
+          toggleWidget('widget-squadInfo', cfg.squadInfo);
         }
       } catch (err) {
         console.warn("Could not load config dashboard. Missing features.");
@@ -296,6 +311,7 @@
         document.getElementById('squadNameDisplay').innerText = squad;
         
         document.getElementById('timetableLocked').classList.add('hidden');
+        document.getElementById('squadInfoLocked').classList.add('hidden');
       } else {
         document.getElementById('loginForm').classList.remove('hidden');
         document.getElementById('welcomeMessage').classList.add('hidden');
@@ -309,9 +325,11 @@
         document.getElementById('timetableLocked').classList.remove('hidden');
         document.getElementById('leaderboardUnlocked').classList.add('hidden');
         document.getElementById('timetableUnlocked').classList.add('hidden');
+        document.getElementById('squadInfoLocked').classList.remove('hidden');
+        document.getElementById('squadInfoContent').classList.add('hidden');
       }
     }
-
+    
     function switchTab(tabName) {
       ['home', 'matches', 'schedule', 'info'].forEach(tab => {
         document.getElementById(`page-${tab}`).classList.add('hidden');
@@ -320,7 +338,7 @@
       
       document.getElementById(`page-${tabName}`).classList.remove('hidden');
       document.getElementById(`tab-${tabName}`).classList.add('active');
-
+    
       const squad = localStorage.getItem('tc_squad');
       if (squad) {
         if (tabName === 'matches') {
@@ -328,6 +346,8 @@
           if (document.getElementById('leaderboardBody').innerHTML === '') fetchLeaderboard(squad);
         } else if (tabName === 'schedule') {
           if (document.getElementById('timetableBody').innerHTML === '') fetchTimetable(squad);
+        } else if (tabName === 'info') {
+          if (document.getElementById('squadInfoContent').innerHTML === '') fetchSquadInfo(squad);
         }
       }
     }
@@ -597,6 +617,38 @@
         document.getElementById('timetableUnlocked').classList.remove('hidden');
       } catch (err) {}
     }
+
+      async function fetchSquadInfo(squadName) {
+        const loadingBox = document.getElementById('squadInfoLoading');
+        const contentBox = document.getElementById('squadInfoContent');
+        
+        if (!loadingBox || !contentBox) return;
+        
+        loadingBox.classList.remove('hidden');
+        contentBox.classList.add('hidden');
+      
+        try {
+          const res = await fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'getSquadInfo', squad: squadName })
+          });
+          const result = await res.json();
+      
+          if (result.status === "success" && result.data) {
+            contentBox.innerHTML = autoLinkText(result.data);
+            contentBox.classList.remove('hidden');
+          } else {
+            contentBox.innerText = "No info available for this squad.";
+            contentBox.classList.remove('hidden');
+          }
+        } catch (err) {
+          contentBox.innerText = "Failed to load squad info.";
+          contentBox.classList.remove('hidden');
+        } finally {
+          loadingBox.classList.add('hidden');
+        }
+      }
+
   </script>
 </body>
 </html>
