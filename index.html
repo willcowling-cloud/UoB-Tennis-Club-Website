@@ -57,14 +57,23 @@
 
     <div id="page-home" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       
-      <div id="widget-announcement" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-1.5 h-full bg-blue-600"></div>
-        <div class="flex items-center gap-2 mb-2">
-          <h3 class="text-base font-bold text-slate-800 m-0">Announcement</h3>
+      <!-- REDESIGNED ANNOUNCEMENT WIDGET -->
+      <div id="widget-announcement" class="hidden bg-white border border-blue-200 rounded-2xl shadow-xs relative overflow-hidden">
+        <!-- Light Blue Header Bar -->
+        <div class="bg-blue-50 border-b border-blue-100 px-5 py-3.5 flex items-center gap-2">
+          <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 000-6M5.436 13.683A2.5 2.5 0 013 11.2V8.8a2.5 2.5 0 012.436-2.483L11 5.882v13.358l-5.564-5.557z"></path>
+          </svg>
+          <h3 class="text-sm font-bold text-blue-900 m-0 tracking-wide uppercase">Club Announcement</h3>
         </div>
-        <div id="announcementLoading" class="text-xs text-slate-400 italic">Checking for notices...</div>
-        <div id="announcementContent" class="hidden text-sm text-slate-600 whitespace-pre-line leading-snug font-normal"></div>
+        
+        <!-- Content Area -->
+        <div class="p-5 sm:p-6">
+          <div id="announcementLoading" class="text-xs text-slate-400 italic">Checking for notices...</div>
+          <div id="announcementContent" class="hidden text-sm text-slate-600 whitespace-pre-line leading-relaxed font-normal"></div>
+        </div>
       </div>
+
 
       <div id="widget-login" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
         <div id="loginForm">
@@ -227,13 +236,12 @@
         <div id="faqLoadingInfo" class="text-xs text-slate-500 italic">Loading FAQs...</div>
         <div id="faqContainerInfo" class="hidden flex flex-col gap-1.5"></div>
       </div>
-      <!-- Info Page Footer -->
-      <div class="md:col-span-2 border-t border-slate-200 pt-6 mt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-        
+      <!-- Info Page Footer (Always at Bottom) -->
+      <div class="border-t border-slate-200 pt-6 mt-4 flex flex-col sm:flex-row items-center justify-between gap-4" style="order: 9999;">
         <!-- Credentials & Credits -->
         <div class="text-center sm:text-left">
           <p class="text-xs font-bold text-slate-700 uppercase tracking-wider m-0">UoB Tennis Members Hub</p>
-          <p class="text-xs text-slate-400 m-0 mt-0.5">Designed & Developed by <strong class="text-slate-600 font-semibold">[Your Name]</strong></p>
+          <p class="text-xs text-slate-400 m-0 mt-0.5">Designed & Developed by <strong class="text-slate-600 font-semibold">Will Cowling</strong></p>
         </div>
       
         <!-- Contact Us Action -->
@@ -246,6 +254,7 @@
           Contact Us
         </a>      
       </div> 
+
       
     </div>
 
@@ -419,8 +428,10 @@
     // Converts plain URLs into clickable links
     function autoLinkText(text) {
       const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-      return text.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold underline hover:text-blue-800 transition-colors">$1</a>');
+      // Added 'break-all' class so long URLs wrap onto the next line on mobile screens
+      return text.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold underline hover:text-blue-800 transition-colors break-all">$1</a>');
     }
+
 
     // Helper to generate FAQ HTML with scope-isolated IDs
     function generateFaqHTML(faqs, scope) {
@@ -637,55 +648,57 @@
       } catch (err) {}
     }
 
-      async function fetchSquadInfo(squadName) {
-        const loadingBox = document.getElementById('squadInfoLoading');
-        const contentBox = document.getElementById('squadInfoContent');
-        
-        if (!loadingBox || !contentBox) return;
-        
-        loadingBox.classList.remove('hidden');
-        contentBox.classList.add('hidden');
+    async function fetchSquadInfo(squadName) {
+      const loadingBox = document.getElementById('squadInfoLoading');
+      const contentBox = document.getElementById('squadInfoContent');
       
-        try {
-          const res = await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'getSquadInfo', squad: squadName })
-          });
-          const result = await res.json();
+      if (!loadingBox || !contentBox) return;
       
-          if (result.status === "success" && result.data) {
-            const text = result.data.trim();
-            const isWhatsApp = text.includes("chat.whatsapp.com") || text.includes("wa.me");
-      
-            if (isWhatsApp) {
-              // Renders a styled WhatsApp button
-              contentBox.innerHTML = `
-                <div class="flex flex-col items-start gap-2">
-                  <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Join Group Chat</span>
-                  <a href="${text}" target="_blank" rel="noopener noreferrer" 
-                     class="inline-flex items-center gap-2.5 px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-xs transition-all transform hover:-translate-y-0.5">
-                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
-                    </svg>
-                    Join Squad WhatsApp
-                  </a>
-                </div>
-              `;
-            } else {
-              contentBox.innerHTML = autoLinkText(text);
-            }
-            contentBox.classList.remove('hidden');
+      loadingBox.classList.remove('hidden');
+      contentBox.classList.add('hidden');
+    
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'getSquadInfo', squad: squadName })
+        });
+        const result = await res.json();
+    
+        if (result.status === "success" && result.data) {
+          const text = result.data.trim();
+          const lowerText = text.toLowerCase();
+          // Updated check to catch plain "whatsapp.com" URLs as well as invite links
+          const isWhatsApp = lowerText.includes("whatsapp") || lowerText.includes("chat.whatsapp.com") || lowerText.includes("wa.me");
+    
+          if (isWhatsApp) {
+            contentBox.innerHTML = `
+              <div class="flex flex-col items-start gap-2">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Join Group Chat</span>
+                <a href="${text}" target="_blank" rel="noopener noreferrer" 
+                   class="inline-flex items-center gap-2.5 px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-xs transition-all transform hover:-translate-y-0.5">
+                  <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+                  </svg>
+                  Join Squad WhatsApp
+                </a>
+              </div>
+            `;
           } else {
-            contentBox.innerText = "No info available for this squad.";
-            contentBox.classList.remove('hidden');
+            contentBox.innerHTML = autoLinkText(text);
           }
-        } catch (err) {
-          contentBox.innerText = "Failed to load squad info.";
           contentBox.classList.remove('hidden');
-        } finally {
-          loadingBox.classList.add('hidden');
+        } else {
+          contentBox.innerText = "No info available for this squad.";
+          contentBox.classList.remove('hidden');
         }
+      } catch (err) {
+        contentBox.innerText = "Failed to load squad info.";
+        contentBox.classList.remove('hidden');
+      } finally {
+        loadingBox.classList.add('hidden');
       }
+    }
+
 
 
   </script>
