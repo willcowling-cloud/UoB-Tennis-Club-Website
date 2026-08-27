@@ -447,17 +447,17 @@
     function generateFaqHTML(faqs, scope) {
       return faqs.map((faq, index) => `
         <div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-2xs">
-          <button onclick="toggleFAQ('${scope}', ${index})" class="w-full text-left px-4 py-3 hover:bg-slate-50 flex justify-between items-center transition-colors cursor-pointer">
+          <button onclick="toggleFAQ('${scope}', ${index})" class="w-full text-left px-5 py-4 hover:bg-slate-50 flex justify-between items-center transition-colors cursor-pointer">
             <span class="font-semibold text-sm text-slate-800">${faq.question}</span>
             <svg id="faq-icon-${scope}-${index}" class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </button>
-          <div id="faq-answer-${scope}-${index}" class="hidden px-4 pb-3 pt-0 text-sm text-slate-600 border-t border-slate-100 whitespace-pre-line leading-normal bg-slate-50/50">
+          <div id="faq-answer-${scope}-${index}" class="hidden px-5 pb-4 -mt-1 text-sm text-slate-600 border-t border-slate-100 whitespace-pre-line leading-relaxed bg-slate-50/50">
             ${faq.answer}
           </div>
         </div>
       `).join('');
     }
-
+    
 
     function toggleFAQ(scope, index) {
       const answerDiv = document.getElementById(`faq-answer-${scope}-${index}`);
