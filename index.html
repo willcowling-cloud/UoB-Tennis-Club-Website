@@ -4,6 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0f172a">
+    <!-- Mobile & Web App Capabilities -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="UoB Tennis">
+  
+  <!-- Home Screen Icon (Uses your logo) -->
+  <link rel="apple-touch-icon" href="logo.jpg">
+  <link rel="icon" type="image/jpeg" href="logo.jpg">
+
   <title>UoB Tennis Members Hub</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
@@ -241,7 +251,7 @@
         <!-- Credentials & Credits -->
         <div class="text-center sm:text-left">
           <p class="text-xs font-bold text-slate-700 uppercase tracking-wider m-0">UoB Tennis Members Hub</p>
-          <p class="text-xs text-slate-400 m-0 mt-0.5">Designed & Developed by <strong class="text-slate-600 font-normal">Will Cowling</strong></p>
+          <p class="text-xs text-slate-400 m-0 mt-0.5">Designed & Developed by <span class="text-slate-600">Will Cowling</span></p>
         </div>
       
         <!-- Contact Us Action -->
@@ -437,16 +447,17 @@
     function generateFaqHTML(faqs, scope) {
       return faqs.map((faq, index) => `
         <div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-2xs">
-          <button onclick="toggleFAQ('${scope}', ${index})" class="w-full text-left px-5 py-4 hover:bg-slate-50 flex justify-between items-center transition-colors cursor-pointer">
+          <button onclick="toggleFAQ('${scope}', ${index})" class="w-full text-left px-4 py-3 hover:bg-slate-50 flex justify-between items-center transition-colors cursor-pointer">
             <span class="font-semibold text-sm text-slate-800">${faq.question}</span>
             <svg id="faq-icon-${scope}-${index}" class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </button>
-          <div id="faq-answer-${scope}-${index}" class="hidden px-5 pb-4 pt-1 text-sm text-slate-600 border-t border-slate-100 whitespace-pre-line leading-relaxed bg-slate-50/50">
+          <div id="faq-answer-${scope}-${index}" class="hidden px-4 pb-3 pt-0 text-sm text-slate-600 border-t border-slate-100 whitespace-pre-line leading-normal bg-slate-50/50">
             ${faq.answer}
           </div>
         </div>
       `).join('');
     }
+
 
     function toggleFAQ(scope, index) {
       const answerDiv = document.getElementById(`faq-answer-${scope}-${index}`);
