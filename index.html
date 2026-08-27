@@ -59,13 +59,11 @@
       
       <!-- REDESIGNED ANNOUNCEMENT WIDGET -->
       <div id="widget-announcement" class="hidden bg-white border border-blue-200 rounded-2xl shadow-xs relative overflow-hidden">
-        <!-- Light Blue Header Bar -->
-        <div class="bg-blue-50 border-b border-blue-100 px-5 py-3.5 flex items-center gap-2">
-          <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 000-6M5.436 13.683A2.5 2.5 0 013 11.2V8.8a2.5 2.5 0 012.436-2.483L11 5.882v13.358l-5.564-5.557z"></path>
-          </svg>
+        <!-- Light Blue Header Bar (Text Only) -->
+        <div class="bg-blue-50 border-b border-blue-100 px-5 py-3.5">
           <h3 class="text-sm font-bold text-blue-900 m-0 tracking-wide uppercase">Club Announcement</h3>
         </div>
+
         
         <!-- Content Area -->
         <div class="p-5 sm:p-6">
@@ -219,8 +217,8 @@
     <div id="page-info" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
       
       <!-- Squad Info Widget -->
-      <div id="widget-squadInfo" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
-        <h3 class="text-base font-bold text-slate-800 m-0 mb-3">Squad Info & Links</h3>
+      <div id="widget-squadInfo" class="hidden bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
+        <h3 class="text-base font-bold text-slate-800 m-0 mb-3">Join your squad WhatsApp below:</h3>
         <div id="squadInfoLocked" class="text-sm text-slate-400 italic text-center py-4 bg-slate-50 rounded-lg border border-dashed border-slate-200">
           Please log in via the portal widget to view your squad info.
         </div>
@@ -229,6 +227,7 @@
         </div>
         <div id="squadInfoContent" class="hidden text-sm text-slate-700 whitespace-pre-line leading-relaxed"></div>
       </div>
+
     
       <!-- FAQ Info Widget -->
       <div id="widget-faqInfo" class="hidden md:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs">
@@ -241,11 +240,11 @@
         <!-- Credentials & Credits -->
         <div class="text-center sm:text-left">
           <p class="text-xs font-bold text-slate-700 uppercase tracking-wider m-0">UoB Tennis Members Hub</p>
-          <p class="text-xs text-slate-400 m-0 mt-0.5">Designed & Developed by <strong class="text-slate-600 font-semibold">Will Cowling</strong></p>
+          <p class="text-xs text-slate-400 m-0 mt-0.5">Designed & Developed by <strong class="text-slate-600 font-normal">Will Cowling</strong></p>
         </div>
       
         <!-- Contact Us Action -->
-        <a href="mailto:tennis@yourschool.ac.uk" 
+        <a href="uobtennis@contact.bham.ac.uk" 
            class="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors">
           <svg class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
@@ -667,19 +666,18 @@
         if (result.status === "success" && result.data) {
           const text = result.data.trim();
           const lowerText = text.toLowerCase();
-          // Updated check to catch plain "whatsapp.com" URLs as well as invite links
           const isWhatsApp = lowerText.includes("whatsapp") || lowerText.includes("chat.whatsapp.com") || lowerText.includes("wa.me");
     
           if (isWhatsApp) {
             contentBox.innerHTML = `
-              <div class="flex flex-col items-start gap-2">
-                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Join Group Chat</span>
+              <div class="pt-1">
                 <a href="${text}" target="_blank" rel="noopener noreferrer" 
-                   class="inline-flex items-center gap-2.5 px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-xs transition-all transform hover:-translate-y-0.5">
-                  <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                   class="inline-flex items-center gap-3 px-5 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm rounded-xl shadow-xs transition-all transform hover:-translate-y-0.5">
+                  <!-- Official WhatsApp SVG Icon -->
+                  <svg class="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24">
                     <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
                   </svg>
-                  Join Squad WhatsApp
+                  <span>Join Squad WhatsApp</span>
                 </a>
               </div>
             `;
@@ -698,6 +696,7 @@
         loadingBox.classList.add('hidden');
       }
     }
+
 
 
 
