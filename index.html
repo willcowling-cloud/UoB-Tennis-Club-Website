@@ -87,7 +87,7 @@
         <div id="loginForm">
           <h3 class="text-base font-bold text-slate-800 m-0 mb-2">Player Portal Login</h3>
           <div class="flex gap-2">
-            <input type="text" id="prefixInput" placeholder="Student Prefix (e.g., abc123)" class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 text-slate-900">
+            <input type="text" id="prefixInput" placeholder="Student Prefix (e.g., abc123)" class="flex-1 min-w-0 px-3 py-2 text-base sm:text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 text-slate-900">
             <button onclick="performLogin()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors">Log In</button>
           </div>
           <div id="loginStatus" class="text-xs text-red-600 font-medium mt-1.5 min-h-[16px]"></div>
@@ -111,14 +111,7 @@
             Please link your LTA number below. <a href="https://www.lta.org.uk/register/" target="_blank" class="text-blue-600 hover:underline font-semibold">Sign up for free here</a>.
           </p>
           <div class="flex gap-2">
-            <input 
-              type="text" 
-              id="ltaInput" 
-              inputmode="numeric" 
-              maxlength="9" 
-              placeholder="Enter 9-digit LTA Number" 
-              class="flex-1 min-w-0 px-3 py-2 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500 text-slate-900"
-            >
+            <input type="text" id="ltaInput" inputmode="numeric" maxlength="9" placeholder="Enter 9-digit LTA Number" class="flex-1 min-w-0 px-3 py-2 text-base sm:text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:border-emerald-500 text-slate-900">
             <button onclick="submitLTA()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow-xs cursor-pointer transition-colors">Save Number</button>
           </div>
           <div id="ltaStatus" class="text-xs font-medium mt-1.5 min-h-[16px]"></div>
