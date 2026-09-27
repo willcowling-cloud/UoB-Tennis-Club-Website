@@ -482,6 +482,12 @@
           localStorage.setItem('tc_prefix', prefix);
           localStorage.setItem('tc_name', result.playerName);
           localStorage.setItem('tc_squad', result.squadName);
+          
+          // Save individual session squad overrides
+          localStorage.setItem('tc_coached_squad', result.coachedSquad || result.squadName);
+          localStorage.setItem('tc_freehit_squad', result.freeHitSquad || result.squadName);
+          localStorage.setItem('tc_matchplay_squad', result.matchplaySquad || result.squadName);
+
           statusBox.innerText = "";
           evaluateAppState();
         } else {
@@ -630,27 +636,96 @@
       } catch (err) {}
     }
 
-    // --- 7. TIMETABLE WIDGET FUNCTIONS ---
-    async function fetchTimetable(squadName) {
-      document.getElementById('timetableLoading').classList.remove('hidden');
-      document.getElementById('timetableUnlocked').classList.add('hidden');
+    async function fetchTimetable() {
+      const loading = document.getElementById('timetableLoading');
+      const unlocked = document.getElementById('timetableUnlocked');
+      const tbody = document.getElementById('timetableBody');
+
+      loading.classList.remove('hidden');
+      unlocked.classList.add('hidden');
+
+      const mainSquad = localStorage.getItem('tc_squad');
+      const coachedSquad = localStorage.getItem('tc_coached_squad') || mainSquad;
+      const freeHitSquad = localStorage.getItem('tc_freehit_squad') || mainSquad;
+      const matchplaySquad = localStorage.getItem('tc_matchplay_squad') || mainSquad;
+
+      // Get unique list of squads to query
+      const uniqueSquads = [...new Set([coachedSquad, freeHitSquad, matchplaySquad].filter(Boolean))];
+
+      if (uniqueSquads.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-slate-400 italic">No squad found. Please log in.</td></tr>`;
+        loading.classList.add('hidden');
+        unlocked.classList.remove('hidden');
+        return;
+      }
+
       try {
-        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'getTimetable', squad: squadName }) });
-        const result = await res.json();
-        if (result.status === "success" && result.data.length > 0) {
-          document.getElementById('timetableBody').innerHTML = result.data.map(row => `
-            <tr class="hover:bg-slate-50/50 transition-colors">
-              <td class="p-2.5 font-medium text-slate-900">${row.session}</td>
-              <td class="p-2.5 text-slate-600">${row.dayTime}</td>
-            </tr>
-          `).join('');
-        } else {
-          document.getElementById('timetableBody').innerHTML = `<tr><td colspan="2" class="p-4 text-center text-slate-400 italic">No scheduled entries found.</td></tr>`;
+        // Fetch timetable data for all assigned squads concurrently
+        const fetches = uniqueSquads.map(squad =>
+          fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'getTimetable', squad: squad })
+          })
+          .then(res => res.json())
+          .then(res => ({ squad, data: res.status === "success" ? res.data : [] }))
+        );
+
+        const results = await Promise.all(fetches);
+        const squadMap = {};
+        results.forEach(item => { squadMap[item.squad] = item.data; });
+
+        let rowsHTML = '';
+
+        // Match Coached session
+        if (squadMap[coachedSquad]) {
+          const item = squadMap[coachedSquad].find(s => s.session.toLowerCase().includes('coached'));
+          if (item) {
+            rowsHTML += `
+              <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="p-2.5 font-medium text-slate-900">${item.session} <span class="text-xs text-slate-400 font-normal">(${coachedSquad})</span></td>
+                <td class="p-2.5 text-slate-600">${item.dayTime}</td>
+              </tr>`;
+          }
         }
-        document.getElementById('timetableLoading').classList.add('hidden');
-        document.getElementById('timetableUnlocked').classList.remove('hidden');
-      } catch (err) {}
+
+        // Match Free Hit session
+        if (squadMap[freeHitSquad]) {
+          const item = squadMap[freeHitSquad].find(s => s.session.toLowerCase().includes('free hit'));
+          if (item) {
+            rowsHTML += `
+              <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="p-2.5 font-medium text-slate-900">${item.session} <span class="text-xs text-slate-400 font-normal">(${freeHitSquad})</span></td>
+                <td class="p-2.5 text-slate-600">${item.dayTime}</td>
+              </tr>`;
+          }
+        }
+
+        // Match Matchplay session
+        if (squadMap[matchplaySquad]) {
+          const item = squadMap[matchplaySquad].find(s => s.session.toLowerCase().includes('matchplay'));
+          if (item) {
+            rowsHTML += `
+              <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="p-2.5 font-medium text-slate-900">${item.session} <span class="text-xs text-slate-400 font-normal">(${matchplaySquad})</span></td>
+                <td class="p-2.5 text-slate-600">${item.dayTime}</td>
+              </tr>`;
+          }
+        }
+
+        if (!rowsHTML) {
+          tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-slate-400 italic">No scheduled entries found.</td></tr>`;
+        } else {
+          tbody.innerHTML = rowsHTML;
+        }
+
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-red-500 italic">Failed to load schedule.</td></tr>`;
+      } finally {
+        loading.classList.add('hidden');
+        unlocked.classList.remove('hidden');
+      }
     }
+
 
         async function fetchSquadInfo(squadName) {
       const loadingBox = document.getElementById('squadInfoLoading');
