@@ -574,7 +574,12 @@
       } catch (err) {}
     }
 
+    let isSubmittingMatch = false;
+
     async function submitMatch() {
+      if (isSubmittingMatch) return; // ignore extra taps while a request is in flight
+
+      const btn = document.querySelector('button[onclick="submitMatch()"]');
       const statusBox = document.getElementById('matchStatusMsg');
       const score = document.getElementById('scoreSelect').value;
       const w1 = document.getElementById('winner1').value, w2 = document.getElementById('winner2').value;
@@ -589,27 +594,36 @@
         return statusBox.innerText = "Select 4 unique players and a score.";
       }
 
+      isSubmittingMatch = true;
+      if (btn) { btn.disabled = true; btn.classList.add('opacity-60', 'cursor-not-allowed'); }
+
       statusBox.className = "text-xs font-medium text-center text-slate-500";
       statusBox.innerText = "Saving match...";
+
+      const squad = localStorage.getItem('tc_squad');
 
       try {
         const res = await fetch(API_URL, {
           method: 'POST',
-          body: JSON.stringify({ action: 'submitMatchResult', squad: localStorage.getItem('tc_squad'), winners: isDoubles ? [w1, w2] : [w1], losers: isDoubles ? [l1, l2] : [l1], score })
+          body: JSON.stringify({ action: 'submitMatchResult', squad, winners: isDoubles ? [w1, w2] : [w1], losers: isDoubles ? [l1, l2] : [l1], score })
         });
         const result = await res.json();
-        
+
         const isSuccess = result.status === "success";
         statusBox.className = `text-xs font-medium text-center ${isSuccess ? "text-emerald-600" : "text-red-600"}`;
         statusBox.innerText = result.message || (isSuccess ? "Match result saved!" : "Failed to submit match.");
-        
+
         if (isSuccess) {
           ['winner1', 'winner2', 'loser1', 'loser2', 'scoreSelect'].forEach(id => document.getElementById(id).value = "");
-          fetchLeaderboard(localStorage.getItem('tc_squad'));
+          fetchLeaderboard(squad);
         }
       } catch (err) {
-        statusBox.className = "text-xs font-medium text-center text-red-600";
-        statusBox.innerText = "Network error submitting match.";
+        statusBox.className = "text-xs font-medium text-center text-amber-600";
+        statusBox.innerText = "No response from the server, but your result may still have saved. Wait a few seconds and check the standings before submitting again.";
+        setTimeout(() => fetchLeaderboard(squad), 3000);
+      } finally {
+        isSubmittingMatch = false;
+        if (btn) { btn.disabled = false; btn.classList.remove('opacity-60', 'cursor-not-allowed'); }
       }
     }
 
